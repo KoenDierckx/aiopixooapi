@@ -30,14 +30,17 @@ class Pixoo:
         self._session: Optional[aiohttp.ClientSession] = None
         self._base_url = f"http://{host}:{port}/post"
         
+
     async def __aenter__(self):
         """Async context manager entry."""
         await self.connect()
         return self
 
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         """Async context manager exit."""
         await self.close()
+
 
     async def connect(self) -> None:
         """Create aiohttp session."""
@@ -50,6 +53,7 @@ class Pixoo:
                 raise_for_status=True,
             )
             logger.debug("Created new aiohttp session")
+
 
     async def _make_request(self, command: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Make a request to the Pixoo device.
@@ -94,6 +98,7 @@ class Pixoo:
             logger.error(f"Error making request to {command}: {e}")
             raise PixooConnectionError(f"Failed to connect to device: {e}")
 
+
     async def close(self) -> None:
         """Close the aiohttp session."""
         if self._session:
@@ -103,6 +108,7 @@ class Pixoo:
             await asyncio.sleep(0)
             self._session = None
             logger.debug("Closed aiohttp session")
+
 
     async def sys_reboot(self) -> Dict[str, Any]:
         """Reboot the Pixoo device.
@@ -118,6 +124,7 @@ class Pixoo:
         """
         logger.debug("Rebooting Pixoo device")
         return await self._make_request("Device/SysReboot")
+
 
     async def get_all_settings(self) -> Dict[str, Any]:
         """Get all settings from the Pixoo device.
