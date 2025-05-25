@@ -6,4 +6,4 @@ from .divoom import Divoom
 from .exceptions import PixooError, PixooConnectionError, PixooCommandError
 from .pixoo64 import Pixoo64
 
-__all__ = ["Pixoo64", "Divoom", "PixooError", "PixooConnectionError", "PixooCommandError"]
+__all__ = ["Divoom", "Pixoo64", "PixooCommandError", "PixooConnectionError", "PixooError"]

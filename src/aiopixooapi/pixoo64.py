@@ -1,6 +1,7 @@
 """Provides functionality specific to the Pixoo64 device."""
 
 from enum import Enum
+from typing import Optional
 
 from . import PixooCommandError
 from .base import BasePixoo
@@ -40,15 +41,18 @@ class Pixoo64(BasePixoo):
         base_url = f"http://{host}:{port}"
         super().__init__(base_url, timeout)
 
-    async def _make_command_request(self, command: str, data: dict = None):
+    async def _make_command_request(self, command: str, data: Optional[dict] = None):
         """Make a request to the Pixoo64 device with a command.
 
         Args:
             command: The command to send to the device.
-            data: Additional data to include in the request.
+            data: Optional payload for the command.
 
         Returns:
             Response dictionary.
+
+        Raises:
+            PixooCommandError: If the command fails or returns an error.
 
         """
         if data is None:
