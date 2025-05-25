@@ -20,7 +20,7 @@ class Pixoo:
 
     def __init__(self, host: str, port: int = 80, timeout: int = 10):
         """Initialize Pixoo device connection.
-        
+
         Args:
             host: IP address of the Pixoo device
             port: Port number (default: 80)
@@ -56,15 +56,15 @@ class Pixoo:
 
     async def _make_request(self, command: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Make a request to the Pixoo device.
-        
+
         Args:
             command: Command string
             params: Optional parameters dictionary
-            
+
         Returns:
             Response dictionary
             with an error_code number = 0 on success
-            
+
         Raises:
             PixooCommandError: If the device returns an error or invalid response.
             PixooConnectionError: If the request fails.
