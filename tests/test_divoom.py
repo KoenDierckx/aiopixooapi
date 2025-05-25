@@ -7,7 +7,7 @@ from aiopixooapi.divoom import Divoom
 
 
 @pytest.mark.asyncio
-async def test_get_dial_type():
+async def test_get_dial_type() -> None:
     """Test the get_dial_type method."""
     async with Divoom() as divoom:
         with aioresponses() as mock:
@@ -26,7 +26,7 @@ async def test_get_dial_type():
 
 
 @pytest.mark.asyncio
-async def test_get_dial_list():
+async def test_get_dial_list() -> None:
     """Test the get_dial_list method."""
     async with Divoom() as divoom:
         with aioresponses() as mock:
@@ -52,7 +52,7 @@ async def test_get_dial_list():
 
 
 @pytest.mark.asyncio
-async def test_get_font_list():
+async def test_get_font_list() -> None:
     """Test the get_font_list method."""
     async with Divoom() as divoom:
         with aioresponses() as mock:
@@ -92,7 +92,7 @@ async def test_get_font_list():
 
 
 @pytest.mark.asyncio
-async def test_get_img_upload_list():
+async def test_get_img_upload_list() -> None:
     """Test the get_img_upload_list method."""
     async with Divoom() as divoom:
         with aioresponses() as mock:
@@ -124,7 +124,7 @@ async def test_get_img_upload_list():
 
 
 @pytest.mark.asyncio
-async def test_get_img_upload_list_invalid():
+async def test_get_img_upload_list_invalid() -> None:
     """Test the get_img_upload_list method with invalid inputs."""
     async with Divoom() as divoom:
         with pytest.raises(ValueError, match="DeviceId and DeviceMac must be provided."):
@@ -132,7 +132,7 @@ async def test_get_img_upload_list_invalid():
 
 
 @pytest.mark.asyncio
-async def test_get_img_like_list():
+async def test_get_img_like_list() -> None:
     """Test the get_img_like_list method."""
     async with Divoom() as divoom:
         with aioresponses() as mock:
@@ -164,7 +164,7 @@ async def test_get_img_like_list():
 
 
 @pytest.mark.asyncio
-async def test_get_img_like_list_invalid():
+async def test_get_img_like_list_invalid() -> None:
     """Test the get_img_like_list method with invalid inputs."""
     async with Divoom() as divoom:
         with pytest.raises(ValueError, match="DeviceId and DeviceMac must be provided."):

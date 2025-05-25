@@ -29,7 +29,7 @@ class CloudChannelIndex(Enum):
 class Pixoo64(BasePixoo):
     """Subclass for handling Pixoo64 device-specific API calls."""
 
-    def __init__(self, host: str, port: int = 80, timeout: int = 10):
+    def __init__(self, host: str, port: int = 80, timeout: int = 10) -> None:
         """Initialize the Pixoo64 device API.
 
         Args:
@@ -76,7 +76,8 @@ class Pixoo64(BasePixoo):
         """
         response = await self._make_command_request("Channel/GetAllConf")
         if response.get("error_code", 0) != 0:
-            raise PixooCommandError(f"Failed to get all settings: {response}")
+            msg = f"Failed to get all settings: {response}"
+            raise PixooCommandError(msg)
         return response
 
     async def set_clock_select_id(self, clock_id: int):
@@ -136,7 +137,8 @@ class Pixoo64(BasePixoo):
 
         """
         if custom_page_index < 0 or custom_page_index > 2:
-            raise ValueError(f"Invalid custom page index: {custom_page_index}. Must be between 0 and 2.")
+            msg = f"Invalid custom page index: {custom_page_index}. Must be between 0 and 2."
+            raise ValueError(msg)
         return await self._make_command_request("Channel/SetCustomPageIndex", {"CustomPageIndex": custom_page_index})
 
     async def set_visualizer_position(self, eq_position: int):
@@ -154,7 +156,8 @@ class Pixoo64(BasePixoo):
 
         """
         if eq_position < 0:
-            raise ValueError(f"Invalid visualizer position: {eq_position}. Must be 0 or greater.")
+            msg = f"Invalid visualizer position: {eq_position}. Must be 0 or greater."
+            raise ValueError(msg)
         return await self._make_command_request("Channel/SetEqPosition", {"EqPosition": eq_position})
 
     async def set_cloud_channel(self, index: CloudChannelIndex):
@@ -182,8 +185,7 @@ class Pixoo64(BasePixoo):
             PixooCommandError: If the API returns an error or invalid response.
 
         """
-        response = await self._make_command_request("Channel/GetIndex")
-        return response
+        return await self._make_command_request("Channel/GetIndex")
 
     async def set_brightness(self, brightness: int):
         """Set the brightness of the device.
@@ -200,7 +202,8 @@ class Pixoo64(BasePixoo):
 
         """
         if brightness < 0 or brightness > 100:
-            raise ValueError(f"Invalid brightness value: {brightness}. Must be between 0 and 100.")
+            msg = f"Invalid brightness value: {brightness}. Must be between 0 and 100."
+            raise ValueError(msg)
         return await self._make_command_request("Channel/SetBrightness", {"Brightness": brightness})
 
     async def set_weather_area(self, longitude: str, latitude: str):
@@ -219,7 +222,8 @@ class Pixoo64(BasePixoo):
 
         """
         if not longitude or not latitude:
-            raise ValueError("Longitude and Latitude must be provided.")
+            msg = "Longitude and Latitude must be provided."
+            raise ValueError(msg)
         return await self._make_command_request("Sys/LogAndLat", {"Longitude": longitude, "Latitude": latitude})
 
     async def set_time_zone(self, time_zone_value: str):
@@ -237,7 +241,8 @@ class Pixoo64(BasePixoo):
 
         """
         if not time_zone_value:
-            raise ValueError("TimeZoneValue must be provided.")
+            msg = "TimeZoneValue must be provided."
+            raise ValueError(msg)
         return await self._make_command_request("Sys/TimeZone", {"TimeZoneValue": time_zone_value})
 
     async def set_system_time(self, utc: int):
@@ -255,7 +260,8 @@ class Pixoo64(BasePixoo):
 
         """
         if utc < 0:
-            raise ValueError("UTC time must be a positive integer.")
+            msg = "UTC time must be a positive integer."
+            raise ValueError(msg)
         return await self._make_command_request("Device/SetUTC", {"Utc": utc})
 
     async def set_screen_switch(self, on_off: int):
@@ -273,7 +279,8 @@ class Pixoo64(BasePixoo):
 
         """
         if on_off not in (0, 1):
-            raise ValueError("OnOff must be 0 (off) or 1 (on).")
+            msg = "OnOff must be 0 (off) or 1 (on)."
+            raise ValueError(msg)
         return await self._make_command_request("Channel/OnOffScreen", {"OnOff": on_off})
 
     async def get_device_time(self):
@@ -288,7 +295,8 @@ class Pixoo64(BasePixoo):
         """
         response = await self._make_command_request("Device/GetDeviceTime")
         if response.get("error_code", 0) != 0:
-            raise PixooCommandError(f"Failed to get device time: {response}")
+            msg = f"Failed to get device time: {response}"
+            raise PixooCommandError(msg)
         return response
 
     async def set_temperature_mode(self, mode: int):
@@ -306,7 +314,8 @@ class Pixoo64(BasePixoo):
 
         """
         if mode not in (0, 1):
-            raise ValueError("Mode must be 0 (Celsius) or 1 (Fahrenheit).")
+            msg = "Mode must be 0 (Celsius) or 1 (Fahrenheit)."
+            raise ValueError(msg)
         return await self._make_command_request("Device/SetDisTempMode", {"Mode": mode})
 
     async def set_screen_rotation_angle(self, mode: int):
@@ -324,7 +333,8 @@ class Pixoo64(BasePixoo):
 
         """
         if mode not in (0, 1, 2, 3):
-            raise ValueError("Mode must be 0 (normal), 1 (90), 2 (180), or 3 (270).")
+            msg = "Mode must be 0 (normal), 1 (90), 2 (180), or 3 (270)."
+            raise ValueError(msg)
         return await self._make_command_request("Device/SetScreenRotationAngle", {"Mode": mode})
 
     async def set_mirror_mode(self, mode: int):
@@ -342,7 +352,8 @@ class Pixoo64(BasePixoo):
 
         """
         if mode not in (0, 1):
-            raise ValueError("Mode must be 0 (disable) or 1 (enable).")
+            msg = "Mode must be 0 (disable) or 1 (enable)."
+            raise ValueError(msg)
         return await self._make_command_request("Device/SetMirrorMode", {"Mode": mode})
 
     async def set_hour_mode(self, mode: int):
@@ -360,7 +371,8 @@ class Pixoo64(BasePixoo):
 
         """
         if mode not in (0, 1):
-            raise ValueError("Mode must be 0 (12-hour) or 1 (24-hour).")
+            msg = "Mode must be 0 (12-hour) or 1 (24-hour)."
+            raise ValueError(msg)
         return await self._make_command_request("Device/SetTime24Flag", {"Mode": mode})
 
     async def set_high_light_mode(self, mode: int):
@@ -378,7 +390,8 @@ class Pixoo64(BasePixoo):
 
         """
         if mode not in (0, 1):
-            raise ValueError("Mode must be 0 (close) or 1 (open).")
+            msg = "Mode must be 0 (close) or 1 (open)."
+            raise ValueError(msg)
         return await self._make_command_request("Device/SetHighLightMode", {"Mode": mode})
 
     async def set_white_balance(self, r_value: int, g_value: int, b_value: int):
@@ -398,11 +411,14 @@ class Pixoo64(BasePixoo):
 
         """
         if not (0 <= r_value <= 100):
-            raise ValueError(f"RValue must be between 0 and 100. Got: {r_value}")
+            msg = f"RValue must be between 0 and 100. Got: {r_value}"
+            raise ValueError(msg)
         if not (0 <= g_value <= 100):
-            raise ValueError(f"GValue must be between 0 and 100. Got: {g_value}")
+            msg = f"GValue must be between 0 and 100. Got: {g_value}"
+            raise ValueError(msg)
         if not (0 <= b_value <= 100):
-            raise ValueError(f"BValue must be between 0 and 100. Got: {b_value}")
+            msg = f"BValue must be between 0 and 100. Got: {b_value}"
+            raise ValueError(msg)
         return await self._make_command_request(
             "Device/SetWhiteBalance",
             {"RValue": r_value, "GValue": g_value, "BValue": b_value},
@@ -420,7 +436,8 @@ class Pixoo64(BasePixoo):
         """
         response = await self._make_command_request("Device/GetWeatherInfo")
         if response.get("error_code", 0) != 0:
-            raise PixooCommandError(f"Failed to get weather info: {response}")
+            msg = f"Failed to get weather info: {response}"
+            raise PixooCommandError(msg)
         return response
 
     async def set_countdown_timer(self, minute: int, second: int, status: int):
@@ -440,11 +457,14 @@ class Pixoo64(BasePixoo):
 
         """
         if not (0 <= minute <= 59):
-            raise ValueError(f"Minute must be between 0 and 59. Got: {minute}")
+            msg = f"Minute must be between 0 and 59. Got: {minute}"
+            raise ValueError(msg)
         if not (0 <= second <= 59):
-            raise ValueError(f"Second must be between 0 and 59. Got: {second}")
+            msg = f"Second must be between 0 and 59. Got: {second}"
+            raise ValueError(msg)
         if status not in (0, 1):
-            raise ValueError("Status must be 0 (stop) or 1 (start).")
+            msg = "Status must be 0 (stop) or 1 (start)."
+            raise ValueError(msg)
         return await self._make_command_request(
             "Tools/SetTimer",
             {"Minute": minute, "Second": second, "Status": status},
@@ -465,7 +485,8 @@ class Pixoo64(BasePixoo):
 
         """
         if status not in (0, 1, 2):
-            raise ValueError("Status must be 0 (stop), 1 (start), or 2 (reset).")
+            msg = "Status must be 0 (stop), 1 (start), or 2 (reset)."
+            raise ValueError(msg)
         return await self._make_command_request("Tools/SetStopWatch", {"Status": status})
 
     async def set_scoreboard(self, blue_score: int, red_score: int):
@@ -484,9 +505,11 @@ class Pixoo64(BasePixoo):
 
         """
         if not (0 <= blue_score <= 999):
-            raise ValueError(f"BlueScore must be between 0 and 999. Got: {blue_score}")
+            msg = f"BlueScore must be between 0 and 999. Got: {blue_score}"
+            raise ValueError(msg)
         if not (0 <= red_score <= 999):
-            raise ValueError(f"RedScore must be between 0 and 999. Got: {red_score}")
+            msg = f"RedScore must be between 0 and 999. Got: {red_score}"
+            raise ValueError(msg)
         return await self._make_command_request(
             "Tools/SetScoreBoard",
             {"BlueScore": blue_score, "RedScore": red_score},
@@ -507,7 +530,8 @@ class Pixoo64(BasePixoo):
 
         """
         if noise_status not in (0, 1):
-            raise ValueError("NoiseStatus must be 0 (stop) or 1 (start).")
+            msg = "NoiseStatus must be 0 (stop) or 1 (start)."
+            raise ValueError(msg)
         return await self._make_command_request("Tools/SetNoiseStatus", {"NoiseStatus": noise_status})
 
     async def play_gif(self, file_type: int, file_name: str):
@@ -526,9 +550,11 @@ class Pixoo64(BasePixoo):
 
         """
         if file_type != 2:
-            raise ValueError("FileType must be 2 (net file).")
+            msg = "FileType must be 2 (net file)."
+            raise ValueError(msg)
         if not file_name:
-            raise ValueError("FileName must be provided.")
+            msg = "FileName must be provided."
+            raise ValueError(msg)
         return await self._make_command_request(
             "Device/PlayTFGif",
             {"FileType": file_type, "FileName": file_name},
@@ -549,7 +575,8 @@ class Pixoo64(BasePixoo):
 
         """
         if not file_id:
-            raise ValueError("FileId must be provided.")
+            msg = "FileId must be provided."
+            raise ValueError(msg)
 
         return await self._make_command_request(
             "Draw/SendRemote",
@@ -568,7 +595,8 @@ class Pixoo64(BasePixoo):
         """
         response = await self._make_command_request("Draw/GetHttpGifId")
         if response.get("error_code", 0) != 0:
-            raise PixooCommandError(f"Failed to get HTTP GIF ID: {response}")
+            msg = f"Failed to get HTTP GIF ID: {response}"
+            raise PixooCommandError(msg)
         return response
 
     async def reset_http_gif_id(self):
@@ -583,7 +611,8 @@ class Pixoo64(BasePixoo):
         """
         response = await self._make_command_request("Draw/ResetHttpGifId")
         if response.get("error_code", 0) != 0:
-            raise PixooCommandError(f"Failed to reset HTTP GIF ID: {response}")
+            msg = f"Failed to reset HTTP GIF ID: {response}"
+            raise PixooCommandError(msg)
         return response
 
     async def send_animation_frame(
@@ -608,17 +637,23 @@ class Pixoo64(BasePixoo):
 
         """
         if not (1 <= pic_num < 60):
-            raise ValueError(f"PicNum must be between 1 and 59. Got: {pic_num}")
+            msg = f"PicNum must be between 1 and 59. Got: {pic_num}"
+            raise ValueError(msg)
         if pic_width not in (16, 32, 64):
-            raise ValueError(f"PicWidth must be one of 16, 32, or 64. Got: {pic_width}")
+            msg = f"PicWidth must be one of 16, 32, or 64. Got: {pic_width}"
+            raise ValueError(msg)
         if not (0 <= pic_offset < pic_num):
-            raise ValueError(f"PicOffset must be between 0 and PicNum-1. Got: {pic_offset}")
+            msg = f"PicOffset must be between 0 and PicNum-1. Got: {pic_offset}"
+            raise ValueError(msg)
         if pic_id < 1:
-            raise ValueError(f"PicID must be greater than or equal to 1. Got: {pic_id}")
+            msg = f"PicID must be greater than or equal to 1. Got: {pic_id}"
+            raise ValueError(msg)
         if pic_speed < 0:
-            raise ValueError(f"PicSpeed must be a positive integer. Got: {pic_speed}")
+            msg = f"PicSpeed must be a positive integer. Got: {pic_speed}"
+            raise ValueError(msg)
         if not pic_data:
-            raise ValueError("PicData must be provided.")
+            msg = "PicData must be provided."
+            raise ValueError(msg)
 
         return await self._make_command_request(
             "Draw/SendHttpGif",
@@ -668,17 +703,23 @@ class Pixoo64(BasePixoo):
 
         """
         if not (0 <= text_id < 20):
-            raise ValueError(f"TextId must be between 0 and 19. Got: {text_id}")
+            msg = f"TextId must be between 0 and 19. Got: {text_id}"
+            raise ValueError(msg)
         if not (16 < text_width < 64):
-            raise ValueError(f"TextWidth must be between 17 and 63. Got: {text_width}")
+            msg = f"TextWidth must be between 17 and 63. Got: {text_width}"
+            raise ValueError(msg)
         if len(text_string) >= 512:
-            raise ValueError(f"TextString length must be less than 512. Got: {len(text_string)}")
+            msg = f"TextString length must be less than 512. Got: {len(text_string)}"
+            raise ValueError(msg)
         if direction not in (0, 1):
-            raise ValueError(f"Direction must be 0 (scroll left) or 1 (scroll right). Got: {direction}")
+            msg = f"Direction must be 0 (scroll left) or 1 (scroll right). Got: {direction}"
+            raise ValueError(msg)
         if not (0 <= font <= 7):
-            raise ValueError(f"Font must be between 0 and 7. Got: {font}")
+            msg = f"Font must be between 0 and 7. Got: {font}"
+            raise ValueError(msg)
         if align not in (1, 2, 3):
-            raise ValueError(f"Align must be 1 (left), 2 (middle), or 3 (right). Got: {align}")
+            msg = f"Align must be 1 (left), 2 (middle), or 3 (right). Got: {align}"
+            raise ValueError(msg)
 
         return await self._make_command_request(
             "Draw/SendHttpText",
@@ -737,9 +778,11 @@ class Pixoo64(BasePixoo):
         """
         for item in item_list:
             if not (0 <= item.get("TextId", -1) < 40):
-                raise ValueError(f"TextId must be between 0 and 39. Got: {item.get('TextId')}")
+                msg = f"TextId must be between 0 and 39. Got: {item.get('TextId')}"
+                raise ValueError(msg)
             if len(item.get("TextString", "")) >= 512:
-                raise ValueError(f"TextString length must be less than 512. Got: {len(item.get('TextString', ''))}")
+                msg = f"TextString length must be less than 512. Got: {len(item.get('TextString', ''))}"
+                raise ValueError(msg)
 
         return await self._make_command_request("Draw/SendHttpItemList", {"ItemList": item_list})
 
@@ -760,11 +803,14 @@ class Pixoo64(BasePixoo):
 
         """
         if active_time_in_cycle < 0:
-            raise ValueError(f"ActiveTimeInCycle must be a non-negative integer. Got: {active_time_in_cycle}")
+            msg = f"ActiveTimeInCycle must be a non-negative integer. Got: {active_time_in_cycle}"
+            raise ValueError(msg)
         if off_time_in_cycle < 0:
-            raise ValueError(f"OffTimeInCycle must be a non-negative integer. Got: {off_time_in_cycle}")
+            msg = f"OffTimeInCycle must be a non-negative integer. Got: {off_time_in_cycle}"
+            raise ValueError(msg)
         if play_total_time <= 0:
-            raise ValueError(f"PlayTotalTime must be a positive integer. Got: {play_total_time}")
+            msg = f"PlayTotalTime must be a positive integer. Got: {play_total_time}"
+            raise ValueError(msg)
 
         return await self._make_command_request(
             "Device/PlayBuzzer",
@@ -790,7 +836,8 @@ class Pixoo64(BasePixoo):
 
         """
         if not isinstance(command_list, list) or not command_list:
-            raise ValueError("CommandList must be a non-empty list.")
+            msg = "CommandList must be a non-empty list."
+            raise ValueError(msg)
 
         return await self._make_command_request("Draw/CommandList", {"CommandList": command_list})
 
@@ -809,7 +856,8 @@ class Pixoo64(BasePixoo):
 
         """
         if not command_url:
-            raise ValueError("CommandUrl must be provided.")
+            msg = "CommandUrl must be provided."
+            raise ValueError(msg)
 
         return await self._make_command_request(
             "Draw/UseHTTPCommandSource",

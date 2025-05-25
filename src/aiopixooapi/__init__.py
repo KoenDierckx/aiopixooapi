@@ -3,7 +3,7 @@
 __version__ = "0.1.0"
 
 from .divoom import Divoom
-from .exceptions import PixooError, PixooConnectionError, PixooCommandError
+from .exceptions import PixooCommandError, PixooConnectionError, PixooError
 from .pixoo64 import Pixoo64
 
 __all__ = ["Divoom", "Pixoo64", "PixooCommandError", "PixooConnectionError", "PixooError"]

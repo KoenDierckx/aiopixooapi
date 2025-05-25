@@ -2,11 +2,11 @@
 import pytest
 from aioresponses import aioresponses
 
-from aiopixooapi.pixoo64 import Pixoo64, CloudChannelIndex, ChannelSelectIndex
+from aiopixooapi.pixoo64 import ChannelSelectIndex, CloudChannelIndex, Pixoo64
 
 
 @pytest.mark.asyncio
-async def test_sys_reboot():
+async def test_sys_reboot() -> None:
     """Test the sys_reboot method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -20,7 +20,7 @@ async def test_sys_reboot():
 
 
 @pytest.mark.asyncio
-async def test_get_all_settings():
+async def test_get_all_settings() -> None:
     """Test the get_all_settings method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -61,7 +61,7 @@ async def test_get_all_settings():
 
 
 @pytest.mark.asyncio
-async def test_set_clock_select_id():
+async def test_set_clock_select_id() -> None:
     """Test the set_clock_select_id method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -74,7 +74,7 @@ async def test_set_clock_select_id():
 
 
 @pytest.mark.asyncio
-async def test_get_clock_info():
+async def test_get_clock_info() -> None:
     """Test the get_clock_info method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -88,7 +88,7 @@ async def test_get_clock_info():
 
 
 @pytest.mark.asyncio
-async def test_set_channel():
+async def test_set_channel() -> None:
     """Test the set_channel method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -101,7 +101,7 @@ async def test_set_channel():
 
 
 @pytest.mark.asyncio
-async def test_set_custom_page_index():
+async def test_set_custom_page_index() -> None:
     """Test the set_custom_page_index method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -114,7 +114,7 @@ async def test_set_custom_page_index():
 
 
 @pytest.mark.asyncio
-async def test_set_custom_page_index_invalid():
+async def test_set_custom_page_index_invalid() -> None:
     """Test the set_custom_page_index method with an invalid index."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="Invalid custom page index: 3. Must be between 0 and 2."):
@@ -122,7 +122,7 @@ async def test_set_custom_page_index_invalid():
 
 
 @pytest.mark.asyncio
-async def test_set_visualizer_position():
+async def test_set_visualizer_position() -> None:
     """Test the set_visualizer_position method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -135,7 +135,7 @@ async def test_set_visualizer_position():
 
 
 @pytest.mark.asyncio
-async def test_set_visualizer_position_invalid():
+async def test_set_visualizer_position_invalid() -> None:
     """Test the set_visualizer_position method with an invalid position."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="Invalid visualizer position: -1. Must be 0 or greater."):
@@ -143,7 +143,7 @@ async def test_set_visualizer_position_invalid():
 
 
 @pytest.mark.asyncio
-async def test_set_cloud_channel():
+async def test_set_cloud_channel() -> None:
     """Test the set_cloud_channel method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -156,7 +156,7 @@ async def test_set_cloud_channel():
 
 
 @pytest.mark.asyncio
-async def test_get_current_channel():
+async def test_get_current_channel() -> None:
     """Test the get_current_channel method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -169,7 +169,7 @@ async def test_get_current_channel():
 
 
 @pytest.mark.asyncio
-async def test_set_brightness():
+async def test_set_brightness() -> None:
     """Test the set_brightness method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -182,7 +182,7 @@ async def test_set_brightness():
 
 
 @pytest.mark.asyncio
-async def test_set_brightness_invalid():
+async def test_set_brightness_invalid() -> None:
     """Test the set_brightness method with an invalid brightness value."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="Invalid brightness value: 150. Must be between 0 and 100."):
@@ -190,7 +190,7 @@ async def test_set_brightness_invalid():
 
 
 @pytest.mark.asyncio
-async def test_set_weather_area():
+async def test_set_weather_area() -> None:
     """Test the set_weather_area method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -203,7 +203,7 @@ async def test_set_weather_area():
 
 
 @pytest.mark.asyncio
-async def test_set_weather_area_invalid():
+async def test_set_weather_area_invalid() -> None:
     """Test the set_weather_area method with invalid inputs."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="Longitude and Latitude must be provided."):
@@ -213,7 +213,7 @@ async def test_set_weather_area_invalid():
 
 
 @pytest.mark.asyncio
-async def test_set_time_zone():
+async def test_set_time_zone() -> None:
     """Test the set_time_zone method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -226,7 +226,7 @@ async def test_set_time_zone():
 
 
 @pytest.mark.asyncio
-async def test_set_time_zone_invalid():
+async def test_set_time_zone_invalid() -> None:
     """Test the set_time_zone method with an invalid input."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="TimeZoneValue must be provided."):
@@ -234,7 +234,7 @@ async def test_set_time_zone_invalid():
 
 
 @pytest.mark.asyncio
-async def test_set_system_time():
+async def test_set_system_time() -> None:
     """Test the set_system_time method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -247,7 +247,7 @@ async def test_set_system_time():
 
 
 @pytest.mark.asyncio
-async def test_set_system_time_invalid():
+async def test_set_system_time_invalid() -> None:
     """Test the set_system_time method with an invalid UTC time."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="UTC time must be a positive integer."):
@@ -255,7 +255,7 @@ async def test_set_system_time_invalid():
 
 
 @pytest.mark.asyncio
-async def test_set_screen_switch():
+async def test_set_screen_switch() -> None:
     """Test the set_screen_switch method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -275,7 +275,7 @@ async def test_set_screen_switch():
 
 
 @pytest.mark.asyncio
-async def test_set_screen_switch_invalid():
+async def test_set_screen_switch_invalid() -> None:
     """Test the set_screen_switch method with an invalid input."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="OnOff must be 0 \\(off\\) or 1 \\(on\\)."):
@@ -283,7 +283,7 @@ async def test_set_screen_switch_invalid():
 
 
 @pytest.mark.asyncio
-async def test_get_device_time():
+async def test_get_device_time() -> None:
     """Test the get_device_time method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -302,7 +302,7 @@ async def test_get_device_time():
 
 
 @pytest.mark.asyncio
-async def test_set_temperature_mode():
+async def test_set_temperature_mode() -> None:
     """Test the set_temperature_mode method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -322,7 +322,7 @@ async def test_set_temperature_mode():
 
 
 @pytest.mark.asyncio
-async def test_set_temperature_mode_invalid():
+async def test_set_temperature_mode_invalid() -> None:
     """Test the set_temperature_mode method with an invalid mode."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="Mode must be 0 \\(Celsius\\) or 1 \\(Fahrenheit\\)."):
@@ -330,7 +330,7 @@ async def test_set_temperature_mode_invalid():
 
 
 @pytest.mark.asyncio
-async def test_set_screen_rotation_angle():
+async def test_set_screen_rotation_angle() -> None:
     """Test the set_screen_rotation_angle method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -364,7 +364,7 @@ async def test_set_screen_rotation_angle():
 
 
 @pytest.mark.asyncio
-async def test_set_screen_rotation_angle_invalid():
+async def test_set_screen_rotation_angle_invalid() -> None:
     """Test the set_screen_rotation_angle method with an invalid mode."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="Mode must be 0 \\(normal\\), 1 \\(90\\), 2 \\(180\\), or 3 \\(270\\)."):
@@ -372,7 +372,7 @@ async def test_set_screen_rotation_angle_invalid():
 
 
 @pytest.mark.asyncio
-async def test_set_mirror_mode():
+async def test_set_mirror_mode() -> None:
     """Test the set_mirror_mode method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -392,7 +392,7 @@ async def test_set_mirror_mode():
 
 
 @pytest.mark.asyncio
-async def test_set_mirror_mode_invalid():
+async def test_set_mirror_mode_invalid() -> None:
     """Test the set_mirror_mode method with an invalid mode."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="Mode must be 0 \\(disable\\) or 1 \\(enable\\)."):
@@ -400,7 +400,7 @@ async def test_set_mirror_mode_invalid():
 
 
 @pytest.mark.asyncio
-async def test_set_hour_mode():
+async def test_set_hour_mode() -> None:
     """Test the set_hour_mode method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -420,7 +420,7 @@ async def test_set_hour_mode():
 
 
 @pytest.mark.asyncio
-async def test_set_hour_mode_invalid():
+async def test_set_hour_mode_invalid() -> None:
     """Test the set_hour_mode method with an invalid mode."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="Mode must be 0 \\(12-hour\\) or 1 \\(24-hour\\)."):
@@ -428,7 +428,7 @@ async def test_set_hour_mode_invalid():
 
 
 @pytest.mark.asyncio
-async def test_set_high_light_mode():
+async def test_set_high_light_mode() -> None:
     """Test the set_high_light_mode method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -448,7 +448,7 @@ async def test_set_high_light_mode():
 
 
 @pytest.mark.asyncio
-async def test_set_high_light_mode_invalid():
+async def test_set_high_light_mode_invalid() -> None:
     """Test the set_high_light_mode method with an invalid mode."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="Mode must be 0 \\(close\\) or 1 \\(open\\)."):
@@ -456,7 +456,7 @@ async def test_set_high_light_mode_invalid():
 
 
 @pytest.mark.asyncio
-async def test_set_white_balance():
+async def test_set_white_balance() -> None:
     """Test the set_white_balance method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -469,7 +469,7 @@ async def test_set_white_balance():
 
 
 @pytest.mark.asyncio
-async def test_set_white_balance_invalid():
+async def test_set_white_balance_invalid() -> None:
     """Test the set_white_balance method with invalid RGB values."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="RValue must be between 0 and 100. Got: 150"):
@@ -481,7 +481,7 @@ async def test_set_white_balance_invalid():
 
 
 @pytest.mark.asyncio
-async def test_get_weather_info():
+async def test_get_weather_info() -> None:
     """Test the get_weather_info method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -512,7 +512,7 @@ async def test_get_weather_info():
 
 
 @pytest.mark.asyncio
-async def test_set_countdown_timer():
+async def test_set_countdown_timer() -> None:
     """Test the set_countdown_timer method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -532,7 +532,7 @@ async def test_set_countdown_timer():
 
 
 @pytest.mark.asyncio
-async def test_set_countdown_timer_invalid():
+async def test_set_countdown_timer_invalid() -> None:
     """Test the set_countdown_timer method with invalid inputs."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="Minute must be between 0 and 59. Got: 60"):
@@ -544,7 +544,7 @@ async def test_set_countdown_timer_invalid():
 
 
 @pytest.mark.asyncio
-async def test_set_stopwatch():
+async def test_set_stopwatch() -> None:
     """Test the set_stopwatch method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -571,7 +571,7 @@ async def test_set_stopwatch():
 
 
 @pytest.mark.asyncio
-async def test_set_stopwatch_invalid():
+async def test_set_stopwatch_invalid() -> None:
     """Test the set_stopwatch method with an invalid status."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="Status must be 0 \\(stop\\), 1 \\(start\\), or 2 \\(reset\\)."):
@@ -579,7 +579,7 @@ async def test_set_stopwatch_invalid():
 
 
 @pytest.mark.asyncio
-async def test_set_scoreboard():
+async def test_set_scoreboard() -> None:
     """Test the set_scoreboard method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -592,7 +592,7 @@ async def test_set_scoreboard():
 
 
 @pytest.mark.asyncio
-async def test_set_scoreboard_invalid():
+async def test_set_scoreboard_invalid() -> None:
     """Test the set_scoreboard method with invalid scores."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="BlueScore must be between 0 and 999. Got: 1000"):
@@ -602,7 +602,7 @@ async def test_set_scoreboard_invalid():
 
 
 @pytest.mark.asyncio
-async def test_set_noise_tool():
+async def test_set_noise_tool() -> None:
     """Test the set_noise_tool method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -622,7 +622,7 @@ async def test_set_noise_tool():
 
 
 @pytest.mark.asyncio
-async def test_set_noise_tool_invalid():
+async def test_set_noise_tool_invalid() -> None:
     """Test the set_noise_tool method with an invalid noise_status."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="NoiseStatus must be 0 \\(stop\\) or 1 \\(start\\)."):
@@ -630,7 +630,7 @@ async def test_set_noise_tool_invalid():
 
 
 @pytest.mark.asyncio
-async def test_play_gif():
+async def test_play_gif() -> None:
     """Test the play_gif method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -643,7 +643,7 @@ async def test_play_gif():
 
 
 @pytest.mark.asyncio
-async def test_play_gif_invalid():
+async def test_play_gif_invalid() -> None:
     """Test the play_gif method with invalid inputs."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="FileType must be 2 \\(net file\\)."):
@@ -653,7 +653,7 @@ async def test_play_gif_invalid():
 
 
 @pytest.mark.asyncio
-async def test_play_divoom_gif():
+async def test_play_divoom_gif() -> None:
     """Test the play_divoom_gif method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -666,7 +666,7 @@ async def test_play_divoom_gif():
 
 
 @pytest.mark.asyncio
-async def test_play_divoom_gif_invalid():
+async def test_play_divoom_gif_invalid() -> None:
     """Test the play_divoom_gif method with an invalid FileId."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="FileId must be provided."):
@@ -674,7 +674,7 @@ async def test_play_divoom_gif_invalid():
 
 
 @pytest.mark.asyncio
-async def test_get_http_gif_id():
+async def test_get_http_gif_id() -> None:
     """Test the get_http_gif_id method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -691,7 +691,7 @@ async def test_get_http_gif_id():
 
 
 @pytest.mark.asyncio
-async def test_reset_http_gif_id():
+async def test_reset_http_gif_id() -> None:
     """Test the reset_http_gif_id method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -704,7 +704,7 @@ async def test_reset_http_gif_id():
 
 
 @pytest.mark.asyncio
-async def test_send_animation_frame():
+async def test_send_animation_frame() -> None:
     """Test the send_animation_frame method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -724,7 +724,7 @@ async def test_send_animation_frame():
 
 
 @pytest.mark.asyncio
-async def test_send_animation_frame_invalid():
+async def test_send_animation_frame_invalid() -> None:
     """Test the send_animation_frame method with invalid inputs."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="PicNum must be between 1 and 59. Got: 60"):
@@ -742,7 +742,7 @@ async def test_send_animation_frame_invalid():
 
 
 @pytest.mark.asyncio
-async def test_send_text():
+async def test_send_text() -> None:
     """Test the send_text method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -766,7 +766,7 @@ async def test_send_text():
 
 
 @pytest.mark.asyncio
-async def test_send_text_invalid():
+async def test_send_text_invalid() -> None:
     """Test the send_text method with invalid inputs."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="TextId must be between 0 and 19. Got: 20"):
@@ -784,7 +784,7 @@ async def test_send_text_invalid():
 
 
 @pytest.mark.asyncio
-async def test_clear_text():
+async def test_clear_text() -> None:
     """Test the clear_text method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -797,7 +797,7 @@ async def test_clear_text():
 
 
 @pytest.mark.asyncio
-async def test_send_display_list():
+async def test_send_display_list() -> None:
     """Test the send_display_list method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -839,7 +839,7 @@ async def test_send_display_list():
 
 
 @pytest.mark.asyncio
-async def test_send_display_list_invalid():
+async def test_send_display_list_invalid() -> None:
     """Test the send_display_list method with invalid inputs."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         invalid_item_list = [
@@ -855,7 +855,7 @@ async def test_send_display_list_invalid():
 
 
 @pytest.mark.asyncio
-async def test_play_buzzer():
+async def test_play_buzzer() -> None:
     """Test the play_buzzer method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -868,7 +868,7 @@ async def test_play_buzzer():
 
 
 @pytest.mark.asyncio
-async def test_play_buzzer_invalid():
+async def test_play_buzzer_invalid() -> None:
     """Test the play_buzzer method with invalid inputs."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="ActiveTimeInCycle must be a non-negative integer. Got: -1"):
@@ -880,7 +880,7 @@ async def test_play_buzzer_invalid():
 
 
 @pytest.mark.asyncio
-async def test_run_command_list():
+async def test_run_command_list() -> None:
     """Test the run_command_list method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -904,7 +904,7 @@ async def test_run_command_list():
 
 
 @pytest.mark.asyncio
-async def test_run_command_list_invalid():
+async def test_run_command_list_invalid() -> None:
     """Test the run_command_list method with invalid inputs."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="CommandList must be a non-empty list."):
@@ -914,7 +914,7 @@ async def test_run_command_list_invalid():
 
 
 @pytest.mark.asyncio
-async def test_use_http_command_source():
+async def test_use_http_command_source() -> None:
     """Test the use_http_command_source method."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with aioresponses() as mock:
@@ -927,7 +927,7 @@ async def test_use_http_command_source():
 
 
 @pytest.mark.asyncio
-async def test_use_http_command_source_invalid():
+async def test_use_http_command_source_invalid() -> None:
     """Test the use_http_command_source method with an invalid URL."""
     async with Pixoo64("192.168.1.100") as pixoo64:
         with pytest.raises(ValueError, match="CommandUrl must be provided."):

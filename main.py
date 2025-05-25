@@ -14,7 +14,7 @@ from aiopixooapi.pixoo64 import Pixoo64
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-async def main():
+async def main() -> None:
     """Interact with Divoom and Pixoo64 devices asynchronously.
 
     This function demonstrates fetching dial types and dial lists from a Divoom device,

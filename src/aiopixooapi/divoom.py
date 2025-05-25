@@ -6,7 +6,7 @@ from .base import BasePixoo
 class Divoom(BasePixoo):
     """Subclass for handling online Divoom API calls."""
 
-    def __init__(self, timeout: int = 10):
+    def __init__(self, timeout: int = 10) -> None:
         """Initialize the online Divoom API.
 
         Args:
@@ -69,7 +69,8 @@ class Divoom(BasePixoo):
 
         """
         if not device_id or not device_mac:
-            raise ValueError("DeviceId and DeviceMac must be provided.")
+            msg = "DeviceId and DeviceMac must be provided."
+            raise ValueError(msg)
 
         data = {"DeviceId": device_id, "DeviceMac": device_mac, "Page": page}
         return await self._make_request("Device/GetImgUploadList", data)
@@ -92,7 +93,8 @@ class Divoom(BasePixoo):
 
         """
         if not device_id or not device_mac:
-            raise ValueError("DeviceId and DeviceMac must be provided.")
+            msg = "DeviceId and DeviceMac must be provided."
+            raise ValueError(msg)
 
         data = {"DeviceId": device_id, "DeviceMac": device_mac, "Page": page}
         return await self._make_request("Device/GetImgLikeList", data)

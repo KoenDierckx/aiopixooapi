@@ -50,16 +50,10 @@ ignore = [
     "ANN201", # Missing type annotation for function argument
     "ANN202", # Missing return type annotation
     "ANN204", # Missing type annotation for `self` or `cls`
-    "EM101",  # Unused exception in `except` block
-    "EM102",  # Bare `except` detected
     "FA100",  # Avoid using `assert` statements
     "G004",   # Unused loop variable
-    "I001",   # Import outside of top-level
     "INP001", # Input function detected
     "PLR0913",# Unnecessary `else` after `return`
     "PLR2004",# Unnecessary `pass` statement
-    "RET504", # Unnecessary `return` statement
     "S101",   # Use of `assert` detected
-    "TRY003", # `try` block with no `except` or `finally`
-    "TRY301", # `try` block with no `except` or `else`
 ]
