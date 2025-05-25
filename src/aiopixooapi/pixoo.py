@@ -1,6 +1,6 @@
 """Main Pixoo device control class.
 
-Documentation: http://docin.divoom-gz.com/web/#/5/24
+Documentation: https:///docin.divoom-gz.com/web/#/5/24
 """
 
 import aiohttp
@@ -28,6 +28,7 @@ class Pixoo:
         self.port = port
         self.timeout = timeout
         self._session: Optional[aiohttp.ClientSession] = None
+        # noinspection HttpUrlsUsage
         self._base_url = f"http://{host}:{port}/post"
         
 
