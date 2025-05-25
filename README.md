@@ -16,7 +16,7 @@ from aiopixooapi import Pixoo
 async def main():
     # Connect to your Pixoo64 device
     async with Pixoo("192.168.1.100") as pixoo:  # Replace with your device's IP address
-        await pixoo.sys_reboot()
+        await pixoo.get_all_settings()
 
 if __name__ == "__main__":
     asyncio.run(main())
