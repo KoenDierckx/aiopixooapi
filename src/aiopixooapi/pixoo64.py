@@ -1,3 +1,5 @@
+"""Provides functionality specific to the Pixoo64 device."""
+
 from enum import Enum
 
 from . import PixooCommandError
@@ -6,6 +8,7 @@ from .base import BasePixoo
 
 class ChannelSelectIndex(Enum):
     """Enum for valid channel IDs with meaningful names."""
+
     FACES = 0          # Faces
     CLOUD_CHANNEL = 1  # Cloud Channel
     VISUALIZER = 2     # Visualizer
@@ -15,6 +18,7 @@ class ChannelSelectIndex(Enum):
 
 class CloudChannelIndex(Enum):
     """Enum for valid cloud channel indices with meaningful names."""
+
     RECOMMEND_GALLERY = 0  # Recommend gallery
     FAVOURITE = 1          # Favourite
     SUBSCRIBE_ARTIST = 2   # Subscribe artist
@@ -31,6 +35,7 @@ class Pixoo64(BasePixoo):
             host: IP address of the Pixoo64 device.
             port: Port number (default: 80).
             timeout: Request timeout in seconds (default: 10).
+
         """
         base_url = f"http://{host}:{port}"
         super().__init__(base_url, timeout)
@@ -44,6 +49,7 @@ class Pixoo64(BasePixoo):
 
         Returns:
             Response dictionary.
+
         """
         if data is None:
             data = {}
@@ -62,6 +68,7 @@ class Pixoo64(BasePixoo):
 
         Raises:
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         response = await self._make_command_request("Channel/GetAllConf")
         if response.get("error_code", 0) != 0:
@@ -79,6 +86,7 @@ class Pixoo64(BasePixoo):
 
         Raises:
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         return await self._make_command_request("Channel/SetClockSelectId", {"ClockId": clock_id})
 
@@ -90,6 +98,7 @@ class Pixoo64(BasePixoo):
 
         Raises:
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         return await self._make_command_request("Channel/GetClockInfo")
 
@@ -104,6 +113,7 @@ class Pixoo64(BasePixoo):
 
         Raises:
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         return await self._make_command_request("Channel/SetIndex", {"SelectIndex": select_index.value})
 
@@ -119,6 +129,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If the custom_page_index is out of range.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if custom_page_index < 0 or custom_page_index > 2:
             raise ValueError(f"Invalid custom page index: {custom_page_index}. Must be between 0 and 2.")
@@ -136,6 +147,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If the eq_position is negative.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if eq_position < 0:
             raise ValueError(f"Invalid visualizer position: {eq_position}. Must be 0 or greater.")
@@ -152,6 +164,7 @@ class Pixoo64(BasePixoo):
 
         Raises:
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         return await self._make_command_request("Channel/CloudIndex", {"Index": index.value})
 
@@ -163,6 +176,7 @@ class Pixoo64(BasePixoo):
 
         Raises:
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         response = await self._make_command_request("Channel/GetIndex")
         return response
@@ -179,6 +193,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If the brightness is out of range.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if brightness < 0 or brightness > 100:
             raise ValueError(f"Invalid brightness value: {brightness}. Must be between 0 and 100.")
@@ -197,6 +212,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If longitude or latitude is not provided.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if not longitude or not latitude:
             raise ValueError("Longitude and Latitude must be provided.")
@@ -214,6 +230,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If the time_zone_value is not provided.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if not time_zone_value:
             raise ValueError("TimeZoneValue must be provided.")
@@ -231,6 +248,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If the UTC time is not valid.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if utc < 0:
             raise ValueError("UTC time must be a positive integer.")
@@ -248,6 +266,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If on_off is not 0 or 1.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if on_off not in (0, 1):
             raise ValueError("OnOff must be 0 (off) or 1 (on).")
@@ -261,6 +280,7 @@ class Pixoo64(BasePixoo):
 
         Raises:
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         response = await self._make_command_request("Device/GetDeviceTime")
         if response.get("error_code", 0) != 0:
@@ -279,6 +299,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If the mode is not 0 or 1.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if mode not in (0, 1):
             raise ValueError("Mode must be 0 (Celsius) or 1 (Fahrenheit).")
@@ -296,6 +317,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If the mode is not one of the valid options.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if mode not in (0, 1, 2, 3):
             raise ValueError("Mode must be 0 (normal), 1 (90), 2 (180), or 3 (270).")
@@ -313,6 +335,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If the mode is not 0 or 1.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if mode not in (0, 1):
             raise ValueError("Mode must be 0 (disable) or 1 (enable).")
@@ -330,6 +353,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If the mode is not 0 or 1.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if mode not in (0, 1):
             raise ValueError("Mode must be 0 (12-hour) or 1 (24-hour).")
@@ -347,6 +371,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If the mode is not 0 or 1.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if mode not in (0, 1):
             raise ValueError("Mode must be 0 (close) or 1 (open).")
@@ -366,6 +391,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If any of the RGB values are out of range.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if not (0 <= r_value <= 100):
             raise ValueError(f"RValue must be between 0 and 100. Got: {r_value}")
@@ -386,6 +412,7 @@ class Pixoo64(BasePixoo):
 
         Raises:
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         response = await self._make_command_request("Device/GetWeatherInfo")
         if response.get("error_code", 0) != 0:
@@ -406,6 +433,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If minute or second is out of range, or if status is not 0 or 1.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if not (0 <= minute <= 59):
             raise ValueError(f"Minute must be between 0 and 59. Got: {minute}")
@@ -430,6 +458,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If status is not 0, 1, or 2.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if status not in (0, 1, 2):
             raise ValueError("Status must be 0 (stop), 1 (start), or 2 (reset).")
@@ -448,6 +477,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If blue_score or red_score is out of range.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if not (0 <= blue_score <= 999):
             raise ValueError(f"BlueScore must be between 0 and 999. Got: {blue_score}")
@@ -470,6 +500,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If noise_status is not 0 or 1.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if noise_status not in (0, 1):
             raise ValueError("NoiseStatus must be 0 (stop) or 1 (start).")
@@ -488,6 +519,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If file_type is not 2 or file_name is not provided.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if file_type != 2:
             raise ValueError("FileType must be 2 (net file).")
@@ -510,6 +542,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If file_id is not provided.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if not file_id:
             raise ValueError("FileId must be provided.")
@@ -527,6 +560,7 @@ class Pixoo64(BasePixoo):
 
         Raises:
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         response = await self._make_command_request("Draw/GetHttpGifId")
         if response.get("error_code", 0) != 0:
@@ -541,6 +575,7 @@ class Pixoo64(BasePixoo):
 
         Raises:
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         response = await self._make_command_request("Draw/ResetHttpGifId")
         if response.get("error_code", 0) != 0:
@@ -548,7 +583,7 @@ class Pixoo64(BasePixoo):
         return response
 
     async def send_animation_frame(
-        self, pic_num: int, pic_width: int, pic_offset: int, pic_id: int, pic_speed: int, pic_data: str
+        self, pic_num: int, pic_width: int, pic_offset: int, pic_id: int, pic_speed: int, pic_data: str,
     ):
         """Send a single frame of an animation to the device.
 
@@ -566,6 +601,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If any of the parameters are invalid.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if not (1 <= pic_num < 60):
             raise ValueError(f"PicNum must be between 1 and 59. Got: {pic_num}")
@@ -625,6 +661,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If any parameter is invalid.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if not (0 <= text_id < 20):
             raise ValueError(f"TextId must be between 0 and 19. Got: {text_id}")
@@ -663,6 +700,7 @@ class Pixoo64(BasePixoo):
 
         Raises:
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         return await self._make_command_request("Draw/ClearHttpText")
 
@@ -691,6 +729,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If any item in the list has invalid parameters.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         for item in item_list:
             if not (0 <= item.get("TextId", -1) < 40):
@@ -714,6 +753,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If any parameter is invalid.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if active_time_in_cycle < 0:
             raise ValueError(f"ActiveTimeInCycle must be a non-negative integer. Got: {active_time_in_cycle}")
@@ -743,6 +783,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If the command_list is empty or not a list.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if not isinstance(command_list, list) or not command_list:
             raise ValueError("CommandList must be a non-empty list.")
@@ -761,6 +802,7 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If the command_url is not provided.
             PixooCommandError: If the API returns an error or invalid response.
+
         """
         if not command_url:
             raise ValueError("CommandUrl must be provided.")

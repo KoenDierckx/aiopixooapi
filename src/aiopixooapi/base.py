@@ -1,7 +1,10 @@
+"""Provides the `BasePixoo` class, which handles common functionality for interacting with the Pixoo API."""
+
 import asyncio
 import json
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Type
+import types
 
 import aiohttp
 
@@ -19,6 +22,7 @@ class BasePixoo:
         Args:
             base_url: Base URL for API requests.
             timeout: Request timeout in seconds (default: 10).
+
         """
         self.base_url = base_url
         self.timeout = timeout
@@ -29,7 +33,12 @@ class BasePixoo:
         await self.connect()
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[types.TracebackType],
+    ):
         """Async context manager exit."""
         await self.close()
 
@@ -55,6 +64,7 @@ class BasePixoo:
         Raises:
             PixooCommandError: If the API returns an error or invalid response.
             PixooConnectionError: If the request fails.
+
         """
         if self._session is None:
             await self.connect()
@@ -68,17 +78,17 @@ class BasePixoo:
                 text = await response.text()
                 try:
                     result = json.loads(text)
-                except Exception as json_err:
+                except json.JSONDecodeError as json_err:
                     logger.error(f"Failed to parse JSON from response: {text}")
                     raise PixooCommandError(
-                        f"Failed to parse JSON from response: {text}"
+                        f"Failed to parse JSON from response: {text}",
                     ) from json_err
                 if result.get("error_code", 0) != 0:
                     raise PixooCommandError(f"API returned error: {result}")
                 return result
-        except Exception as e:
+        except (aiohttp.ClientError, asyncio.TimeoutError) as e:
             logger.error(f"Error making request to {endpoint}: {e}")
-            raise PixooConnectionError(f"Failed to connect to API: {e}")
+            raise PixooConnectionError(f"Failed to connect to API: {e}") from e
 
     async def close(self) -> None:
         """Close the aiohttp session."""

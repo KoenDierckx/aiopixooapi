@@ -1,3 +1,5 @@
+"""Unit tests for the Divoom device functionality."""
+
 import pytest
 from aioresponses import aioresponses
 

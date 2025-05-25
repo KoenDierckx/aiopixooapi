@@ -1,3 +1,4 @@
+"""Unit tests for the Pixoo64 device functionality."""
 import pytest
 from aioresponses import aioresponses
 

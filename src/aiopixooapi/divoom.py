@@ -1,3 +1,5 @@
+"""Provides functionality for interacting with Divoom devices."""
+
 from .base import BasePixoo
 
 
@@ -9,6 +11,7 @@ class Divoom(BasePixoo):
 
         Args:
             timeout: Request timeout in seconds (default: 10).
+
         """
         base_url = "https://app.divoom-gz.com"
         super().__init__(base_url, timeout)
@@ -30,6 +33,7 @@ class Divoom(BasePixoo):
         Raises:
             PixooCommandError: If the API returns an error or invalid response.
             PixooConnectionError: If the request fails.
+
         """
         data = {"DialType": dial_type, "Page": page}
         return await self._make_request("Channel/GetDialList", data)
@@ -43,6 +47,7 @@ class Divoom(BasePixoo):
         Raises:
             PixooCommandError: If the API returns an error or invalid response.
             PixooConnectionError: If the request fails.
+
         """
         return await self._make_request("Device/GetTimeDialFontList")
 
@@ -61,6 +66,7 @@ class Divoom(BasePixoo):
             ValueError: If device_id or device_mac is not provided.
             PixooCommandError: If the API returns an error or invalid response.
             PixooConnectionError: If the request fails.
+
         """
         if not device_id or not device_mac:
             raise ValueError("DeviceId and DeviceMac must be provided.")
@@ -83,6 +89,7 @@ class Divoom(BasePixoo):
             ValueError: If device_id or device_mac is not provided.
             PixooCommandError: If the API returns an error or invalid response.
             PixooConnectionError: If the request fails.
+
         """
         if not device_id or not device_mac:
             raise ValueError("DeviceId and DeviceMac must be provided.")

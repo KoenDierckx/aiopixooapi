@@ -1,6 +1,4 @@
-"""
-aiopixooapi - An asynchronous Python library for Divoom Pixoo64 LED display
-"""
+"""aiopixooapi - An asynchronous Python library for Divoom Pixoo64 LED display."""
 
 __version__ = "0.1.0"
 
