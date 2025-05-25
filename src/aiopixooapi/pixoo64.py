@@ -653,7 +653,7 @@ class Pixoo64(BasePixoo):
 
         """
         if not (1 <= pic_num < MAX_PIC_NUM):
-            msg = f"PicNum must be between 1 and {MAX_PIC_NUM - 1}. Got: {pic_num}"
+            msg = f"PicNum must be between 1 and {MAX_PIC_NUM}. Got: {pic_num}"
             raise ValueError(msg)
         if pic_width not in (16, 32, 64):
             msg = f"PicWidth must be one of 16, 32, or 64. Got: {pic_width}"
@@ -722,7 +722,7 @@ class Pixoo64(BasePixoo):
             msg = f"TextId must be between 0 and {MAX_TEXT_ID}. Got: {text_id}"
             raise ValueError(msg)
         if not (MIN_TEXT_WIDTH < text_width < MAX_TEXT_WIDTH):
-            msg = f"TextWidth must be between {MIN_TEXT_WIDTH + 1} and {MAX_TEXT_WIDTH - 1}. Got: {text_width}"
+            msg = f"TextWidth must be between {MIN_TEXT_WIDTH} and {MAX_TEXT_WIDTH}. Got: {text_width}"
             raise ValueError(msg)
         if len(text_string) >= MAX_TEXT_LENGTH:
             msg = f"TextString length must be less than {MAX_TEXT_LENGTH}. Got: {len(text_string)}"
@@ -735,6 +735,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         if align not in (1, 2, 3):
             msg = f"Align must be 1 (left), 2 (middle), or 3 (right). Got: {align}"
+            raise ValueError(msg)
 
         return await self._make_command_request(
             "Draw/SendHttpText",
