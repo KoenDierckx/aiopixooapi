@@ -1,4 +1,5 @@
 # ruff: noqa: PLR2004, Magic value used in comparison
+# ruff: noqa: S101, Use of `assert` detected
 
 """Unit tests for the Pixoo64 device functionality."""
 import pytest

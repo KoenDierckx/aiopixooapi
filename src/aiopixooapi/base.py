@@ -1,12 +1,17 @@
 """Provides the `BasePixoo` class, which handles common functionality for interacting with the Pixoo API."""
 
+from __future__ import annotations
+
 import asyncio
 import json
 import logging
-import types
-from typing import Any, Dict, Optional, Type
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    import types
 
 import aiohttp
+from typing_extensions import Self
 
 from .exceptions import PixooCommandError, PixooConnectionError
 
@@ -14,7 +19,11 @@ logger = logging.getLogger(__name__)
 
 
 class BasePixoo:
-    """Base class for handling common Pixoo API functionality."""
+    """Base class for handling common Pixoo API functionality.
+
+    This class provides methods for connecting to the Pixoo API, making requests,
+    and managing the aiohttp session.
+    """
 
     def __init__(self, base_url: str, timeout: int = 10) -> None:
         """Initialize the base Pixoo API class.
@@ -26,19 +35,19 @@ class BasePixoo:
         """
         self.base_url = base_url
         self.timeout = timeout
-        self._session: Optional[aiohttp.ClientSession] = None
+        self._session: aiohttp.ClientSession | None = None
 
-    async def __aenter__(self):
+    async def __aenter__(self) -> Self:
         """Async context manager entry."""
         await self.connect()
         return self
 
     async def __aexit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[types.TracebackType],
-    ):
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: types.TracebackType | None,
+    ) -> None:
         """Async context manager exit."""
         await self.close()
 
@@ -51,7 +60,7 @@ class BasePixoo:
             )
             logger.debug("Created new aiohttp session")
 
-    async def _make_request(self, endpoint: str, data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    async def _make_request(self, endpoint: str, data: dict[str, Any] | None = None) -> dict[str, Any]:
         """Make a request to the API.
 
         Args:

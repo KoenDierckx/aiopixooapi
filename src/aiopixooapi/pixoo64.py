@@ -1,7 +1,8 @@
 """Provides functionality specific to the Pixoo64 device."""
 
+from __future__ import annotations
+
 from enum import Enum
-from typing import Optional
 
 from . import PixooCommandError
 from .base import BasePixoo
@@ -21,23 +22,24 @@ MAX_TEXT_LENGTH = 512
 MAX_FONT = 7
 MAX_ITEM_TEXT_ID = 39
 
+
 class ChannelSelectIndex(Enum):
     """Enum for valid channel IDs with meaningful names."""
 
-    FACES = 0          # Faces
+    FACES = 0  # Faces
     CLOUD_CHANNEL = 1  # Cloud Channel
-    VISUALIZER = 2     # Visualizer
-    CUSTOM = 3         # Custom
-    BLACK_SCREEN = 4   # Black Screen
+    VISUALIZER = 2  # Visualizer
+    CUSTOM = 3  # Custom
+    BLACK_SCREEN = 4  # Black Screen
 
 
 class CloudChannelIndex(Enum):
     """Enum for valid cloud channel indices with meaningful names."""
 
     RECOMMEND_GALLERY = 0  # Recommend gallery
-    FAVOURITE = 1          # Favourite
-    SUBSCRIBE_ARTIST = 2   # Subscribe artist
-    ALBUM = 3              # Album
+    FAVOURITE = 1  # Favourite
+    SUBSCRIBE_ARTIST = 2  # Subscribe artist
+    ALBUM = 3  # Album
 
 
 class Pixoo64(BasePixoo):
@@ -55,7 +57,7 @@ class Pixoo64(BasePixoo):
         base_url = f"http://{host}:{port}"
         super().__init__(base_url, timeout)
 
-    async def _make_command_request(self, command: str, data: Optional[dict] = None) -> dict:
+    async def _make_command_request(self, command: str, data: dict | None = None) -> dict:
         """Make a request to the Pixoo64 device with a command.
 
         Args:
@@ -629,8 +631,8 @@ class Pixoo64(BasePixoo):
             raise PixooCommandError(msg)
         return response
 
-    async def send_animation_frame( # noqa: PLR0913
-        self, pic_num: int, pic_width: int, pic_offset: int, pic_id: int, pic_speed: int, pic_data: str,
+    async def send_animation_frame(  # noqa: PLR0913
+            self, pic_num: int, pic_width: int, pic_offset: int, pic_id: int, pic_speed: int, pic_data: str,
     ) -> dict:
         """Send a single frame of an animation to the device.
 
@@ -681,18 +683,18 @@ class Pixoo64(BasePixoo):
             },
         )
 
-    async def send_text( # noqa: PLR0913
-        self,
-        text_id: int,
-        x: int,
-        y: int,
-        direction: int,
-        font: int,
-        text_width: int,
-        text_string: str,
-        speed: int,
-        color: str,
-        align: int = 1,
+    async def send_text(  # noqa: PLR0913
+            self,
+            text_id: int,
+            x: int,
+            y: int,
+            direction: int,
+            font: int,
+            text_width: int,
+            text_string: str,
+            speed: int,
+            color: str,
+            align: int = 1,
     ) -> dict:
         """Send text to the device.
 
