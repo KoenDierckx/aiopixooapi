@@ -45,6 +45,26 @@ OLDER REFERENCES
 * http://doc.divoom-gz.com/web/#/7
 * http://doc.divoom-gz.com/web/#/5
 
+## Running Tests
+
+To install test dependencies (including pytest):
+
+```bash
+pip install .[test]
+```
+
+To run the tests using pytest, execute:
+
+```bash
+pytest
+```
+
+Or to run tests in a specific file:
+
+```bash
+pytest tests/test_pixoo.py
+```
+
 ## License
 
-This project is licensed under the GNU Affero General Public License v3.0 - see the LICENSE file for details. 
+This project is licensed under the GNU Affero General Public License v3.0 - see the LICENSE file for details.
