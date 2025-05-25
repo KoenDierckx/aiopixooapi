@@ -16,11 +16,11 @@ class Divoom(BasePixoo):
         base_url = "https://app.divoom-gz.com"
         super().__init__(base_url, timeout)
 
-    async def get_dial_type(self):
+    async def get_dial_type(self) -> dict:
         """Fetch the list of dial types from the Divoom API."""
         return await self._make_request("Channel/GetDialType")
 
-    async def get_dial_list(self, dial_type: str, page: int):
+    async def get_dial_list(self, dial_type: str, page: int) -> dict:
         """Fetch the list of dials for a specific type and page.
 
         Args:
@@ -38,7 +38,7 @@ class Divoom(BasePixoo):
         data = {"DialType": dial_type, "Page": page}
         return await self._make_request("Channel/GetDialList", data)
 
-    async def get_font_list(self):
+    async def get_font_list(self) -> dict:
         """Fetch the list of available fonts from the Divoom API.
 
         Returns:
@@ -51,7 +51,7 @@ class Divoom(BasePixoo):
         """
         return await self._make_request("Device/GetTimeDialFontList")
 
-    async def get_img_upload_list(self, device_id: int, device_mac: str, page: int = 1):
+    async def get_img_upload_list(self, device_id: int, device_mac: str, page: int = 1) -> dict:
         """Fetch the image upload list from the Divoom API.
 
         Args:
@@ -75,7 +75,7 @@ class Divoom(BasePixoo):
         data = {"DeviceId": device_id, "DeviceMac": device_mac, "Page": page}
         return await self._make_request("Device/GetImgUploadList", data)
 
-    async def get_img_like_list(self, device_id: int, device_mac: str, page: int = 1):
+    async def get_img_like_list(self, device_id: int, device_mac: str, page: int = 1) -> dict:
         """Fetch the liked image list from the Divoom API.
 
         Args:

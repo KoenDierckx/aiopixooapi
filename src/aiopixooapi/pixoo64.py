@@ -41,7 +41,7 @@ class Pixoo64(BasePixoo):
         base_url = f"http://{host}:{port}"
         super().__init__(base_url, timeout)
 
-    async def _make_command_request(self, command: str, data: Optional[dict] = None):
+    async def _make_command_request(self, command: str, data: Optional[dict] = None) -> dict:
         """Make a request to the Pixoo64 device with a command.
 
         Args:
@@ -60,11 +60,11 @@ class Pixoo64(BasePixoo):
         data["Command"] = command
         return await self._make_request("post", data)
 
-    async def sys_reboot(self):
+    async def sys_reboot(self) -> dict:
         """Reboot the Pixoo64 device."""
         return await self._make_command_request("Device/SysReboot")
 
-    async def get_all_settings(self):
+    async def get_all_settings(self) -> dict:
         """Get all settings from the Pixoo64 device.
 
         Returns:
@@ -80,7 +80,7 @@ class Pixoo64(BasePixoo):
             raise PixooCommandError(msg)
         return response
 
-    async def set_clock_select_id(self, clock_id: int):
+    async def set_clock_select_id(self, clock_id: int) -> dict:
         """Set the clock face by selecting the clock ID.
 
         Args:
@@ -95,7 +95,7 @@ class Pixoo64(BasePixoo):
         """
         return await self._make_command_request("Channel/SetClockSelectId", {"ClockId": clock_id})
 
-    async def get_clock_info(self):
+    async def get_clock_info(self) -> dict:
         """Get the current working face ID and brightness.
 
         Returns:
@@ -107,7 +107,7 @@ class Pixoo64(BasePixoo):
         """
         return await self._make_command_request("Channel/GetClockInfo")
 
-    async def set_channel(self, select_index: ChannelSelectIndex):
+    async def set_channel(self, select_index: ChannelSelectIndex) -> dict:
         """Set the device to the selected channel.
 
         Args:
@@ -122,7 +122,7 @@ class Pixoo64(BasePixoo):
         """
         return await self._make_command_request("Channel/SetIndex", {"SelectIndex": select_index.value})
 
-    async def set_custom_page_index(self, custom_page_index: int):
+    async def set_custom_page_index(self, custom_page_index: int) -> dict:
         """Set the device to a specific custom page index.
 
         Args:
@@ -141,7 +141,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Channel/SetCustomPageIndex", {"CustomPageIndex": custom_page_index})
 
-    async def set_visualizer_position(self, eq_position: int):
+    async def set_visualizer_position(self, eq_position: int) -> dict:
         """Set the device to a specific visualizer position.
 
         Args:
@@ -160,7 +160,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Channel/SetEqPosition", {"EqPosition": eq_position})
 
-    async def set_cloud_channel(self, index: CloudChannelIndex):
+    async def set_cloud_channel(self, index: CloudChannelIndex) -> dict:
         """Set the device to a specific cloud channel.
 
         Args:
@@ -175,7 +175,7 @@ class Pixoo64(BasePixoo):
         """
         return await self._make_command_request("Channel/CloudIndex", {"Index": index.value})
 
-    async def get_current_channel(self):
+    async def get_current_channel(self) -> dict:
         """Get the current channel the device is on.
 
         Returns:
@@ -187,7 +187,7 @@ class Pixoo64(BasePixoo):
         """
         return await self._make_command_request("Channel/GetIndex")
 
-    async def set_brightness(self, brightness: int):
+    async def set_brightness(self, brightness: int) -> dict:
         """Set the brightness of the device.
 
         Args:
@@ -206,7 +206,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Channel/SetBrightness", {"Brightness": brightness})
 
-    async def set_weather_area(self, longitude: str, latitude: str):
+    async def set_weather_area(self, longitude: str, latitude: str) -> dict:
         """Set the weather area by specifying longitude and latitude.
 
         Args:
@@ -226,7 +226,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Sys/LogAndLat", {"Longitude": longitude, "Latitude": latitude})
 
-    async def set_time_zone(self, time_zone_value: str):
+    async def set_time_zone(self, time_zone_value: str) -> dict:
         """Set the time zone of the device.
 
         Args:
@@ -245,7 +245,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Sys/TimeZone", {"TimeZoneValue": time_zone_value})
 
-    async def set_system_time(self, utc: int):
+    async def set_system_time(self, utc: int) -> dict:
         """Set the system time of the device.
 
         Args:
@@ -264,7 +264,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Device/SetUTC", {"Utc": utc})
 
-    async def set_screen_switch(self, on_off: int):
+    async def set_screen_switch(self, on_off: int) -> dict:
         """Switch the screen on or off.
 
         Args:
@@ -283,7 +283,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Channel/OnOffScreen", {"OnOff": on_off})
 
-    async def get_device_time(self):
+    async def get_device_time(self) -> dict:
         """Get the device system time.
 
         Returns:
@@ -299,7 +299,7 @@ class Pixoo64(BasePixoo):
             raise PixooCommandError(msg)
         return response
 
-    async def set_temperature_mode(self, mode: int):
+    async def set_temperature_mode(self, mode: int) -> dict:
         """Set the temperature mode to Celsius or Fahrenheit.
 
         Args:
@@ -318,7 +318,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Device/SetDisTempMode", {"Mode": mode})
 
-    async def set_screen_rotation_angle(self, mode: int):
+    async def set_screen_rotation_angle(self, mode: int) -> dict:
         """Set the screen rotation angle.
 
         Args:
@@ -337,7 +337,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Device/SetScreenRotationAngle", {"Mode": mode})
 
-    async def set_mirror_mode(self, mode: int):
+    async def set_mirror_mode(self, mode: int) -> dict:
         """Set the screen mirror mode.
 
         Args:
@@ -356,7 +356,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Device/SetMirrorMode", {"Mode": mode})
 
-    async def set_hour_mode(self, mode: int):
+    async def set_hour_mode(self, mode: int) -> dict:
         """Set the screen hour mode to 24-hour or 12-hour.
 
         Args:
@@ -375,7 +375,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Device/SetTime24Flag", {"Mode": mode})
 
-    async def set_high_light_mode(self, mode: int):
+    async def set_high_light_mode(self, mode: int) -> dict:
         """Set the screen high light mode.
 
         Args:
@@ -394,7 +394,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Device/SetHighLightMode", {"Mode": mode})
 
-    async def set_white_balance(self, r_value: int, g_value: int, b_value: int):
+    async def set_white_balance(self, r_value: int, g_value: int, b_value: int) -> dict:
         """Set the screen white balance.
 
         Args:
@@ -424,7 +424,7 @@ class Pixoo64(BasePixoo):
             {"RValue": r_value, "GValue": g_value, "BValue": b_value},
         )
 
-    async def get_weather_info(self):
+    async def get_weather_info(self) -> dict:
         """Get the weather information displayed on the device.
 
         Returns:
@@ -440,7 +440,7 @@ class Pixoo64(BasePixoo):
             raise PixooCommandError(msg)
         return response
 
-    async def set_countdown_timer(self, minute: int, second: int, status: int):
+    async def set_countdown_timer(self, minute: int, second: int, status: int) -> dict:
         """Control the countdown tool.
 
         Args:
@@ -470,7 +470,7 @@ class Pixoo64(BasePixoo):
             {"Minute": minute, "Second": second, "Status": status},
         )
 
-    async def set_stopwatch(self, status: int):
+    async def set_stopwatch(self, status: int) -> dict:
         """Control the stopwatch tool.
 
         Args:
@@ -489,7 +489,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Tools/SetStopWatch", {"Status": status})
 
-    async def set_scoreboard(self, blue_score: int, red_score: int):
+    async def set_scoreboard(self, blue_score: int, red_score: int) -> dict:
         """Control the scoreboard tool.
 
         Args:
@@ -515,7 +515,7 @@ class Pixoo64(BasePixoo):
             {"BlueScore": blue_score, "RedScore": red_score},
         )
 
-    async def set_noise_tool(self, noise_status: int):
+    async def set_noise_tool(self, noise_status: int) -> dict:
         """Control the noise tool.
 
         Args:
@@ -534,7 +534,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Tools/SetNoiseStatus", {"NoiseStatus": noise_status})
 
-    async def play_gif(self, file_type: int, file_name: str):
+    async def play_gif(self, file_type: int, file_name: str) -> dict:
         """Play a GIF file on the device.
 
         Args:
@@ -560,7 +560,7 @@ class Pixoo64(BasePixoo):
             {"FileType": file_type, "FileName": file_name},
         )
 
-    async def play_divoom_gif(self, file_id: str):
+    async def play_divoom_gif(self, file_id: str) -> dict:
         """Play a Divoom GIF file on the device.
 
         Args:
@@ -583,7 +583,7 @@ class Pixoo64(BasePixoo):
             {"FileId": file_id},
         )
 
-    async def get_http_gif_id(self):
+    async def get_http_gif_id(self) -> dict:
         """Get the PicId for the next HTTP GIF animation.
 
         Returns:
@@ -599,7 +599,7 @@ class Pixoo64(BasePixoo):
             raise PixooCommandError(msg)
         return response
 
-    async def reset_http_gif_id(self):
+    async def reset_http_gif_id(self) -> dict:
         """Reset the HTTP GIF PicId to start from 1.
 
         Returns:
@@ -615,9 +615,9 @@ class Pixoo64(BasePixoo):
             raise PixooCommandError(msg)
         return response
 
-    async def send_animation_frame(
+    async def send_animation_frame( # noqa: PLR0913
         self, pic_num: int, pic_width: int, pic_offset: int, pic_id: int, pic_speed: int, pic_data: str,
-    ):
+    ) -> dict:
         """Send a single frame of an animation to the device.
 
         Args:
@@ -667,7 +667,7 @@ class Pixoo64(BasePixoo):
             },
         )
 
-    async def send_text(
+    async def send_text( # noqa: PLR0913
         self,
         text_id: int,
         x: int,
@@ -679,7 +679,7 @@ class Pixoo64(BasePixoo):
         speed: int,
         color: str,
         align: int = 1,
-    ):
+    ) -> dict:
         """Send text to the device.
 
         Args:
@@ -737,7 +737,7 @@ class Pixoo64(BasePixoo):
             },
         )
 
-    async def clear_text(self):
+    async def clear_text(self) -> dict:
         """Clear all text areas on the device.
 
         Returns:
@@ -749,7 +749,7 @@ class Pixoo64(BasePixoo):
         """
         return await self._make_command_request("Draw/ClearHttpText")
 
-    async def send_display_list(self, item_list: list):
+    async def send_display_list(self, item_list: list) -> dict:
         """Send a display list to the device.
 
         Args:
@@ -786,7 +786,7 @@ class Pixoo64(BasePixoo):
 
         return await self._make_command_request("Draw/SendHttpItemList", {"ItemList": item_list})
 
-    async def play_buzzer(self, active_time_in_cycle: int, off_time_in_cycle: int, play_total_time: int):
+    async def play_buzzer(self, active_time_in_cycle: int, off_time_in_cycle: int, play_total_time: int) -> dict:
         """Play the buzzer on the device.
 
         Args:
@@ -821,7 +821,7 @@ class Pixoo64(BasePixoo):
             },
         )
 
-    async def run_command_list(self, command_list: list):
+    async def run_command_list(self, command_list: list) -> dict:
         """Run a list of commands on the device.
 
         Args:
@@ -841,7 +841,7 @@ class Pixoo64(BasePixoo):
 
         return await self._make_command_request("Draw/CommandList", {"CommandList": command_list})
 
-    async def use_http_command_source(self, command_url: str):
+    async def use_http_command_source(self, command_url: str) -> dict:
         """Run commands from a URL on the device.
 
         Args:

@@ -79,7 +79,7 @@ class BasePixoo:
                 try:
                     result = json.loads(text)
                 except json.JSONDecodeError as json_err:
-                    logger.exception(f"Failed to parse JSON from response: {text}")
+                    logger.exception("Failed to parse JSON from response: %s", text)
                     msg = f"Failed to parse JSON from response: {text}"
                     raise PixooCommandError(
                         msg,
@@ -89,7 +89,7 @@ class BasePixoo:
                     raise PixooCommandError(msg)
                 return result
         except (aiohttp.ClientError, asyncio.TimeoutError) as e:
-            logger.exception(f"Error making request to {endpoint}")
+            logger.exception("Error making request to %s", endpoint)
             msg = f"Failed to connect to API: {e}"
             raise PixooConnectionError(msg) from e
 
