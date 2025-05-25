@@ -17,16 +17,12 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU Affero General Public License v3",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
     "aiohttp>=3.9.0",
 ]
 [project.urls]
-Homepage = "https://github.com/yourusername/aiopixooapi"
-Documentation = "https://github.com/yourusername/aiopixooapi#readme"
-Repository = "https://github.com/yourusername/aiopixooapi.git"
-Issues = "https://github.com/yourusername/aiopixooapi/issues" 
+Homepage = "https://github.com/KoenDierckx/aiopixooapi"
+Documentation = "https://github.com/KoenDierckx/aiopixooapi#readme"
+Repository = "https://github.com/KoenDierckx/aiopixooapi.git"
+Issues = "https://github.com/KoenDierckx/aiopixooapi/issues"
