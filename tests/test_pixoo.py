@@ -1,7 +1,8 @@
-import pytest
 from unittest.mock import AsyncMock, patch
-from aiopixooapi.pixoo import Pixoo
+
+import pytest
 from aiopixooapi.exceptions import PixooCommandError
+from aiopixooapi.pixoo import Pixoo
 
 
 @pytest.mark.asyncio
