@@ -7,7 +7,7 @@ import aiohttp
 import asyncio
 import logging
 import json
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional
 from .exceptions import PixooConnectionError, PixooCommandError
 
 logger = logging.getLogger(__name__)

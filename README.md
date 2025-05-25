@@ -16,14 +16,7 @@ from aiopixooapi import Pixoo
 async def main():
     # Connect to your Pixoo64 device
     async with Pixoo("192.168.1.100") as pixoo:  # Replace with your device's IP address
-        # Display text
-        await pixoo.draw_text("Hello, World!", x=0, y=0, color=(255, 0, 0))
-
-        # Display an image
-        await pixoo.draw_image("path/to/image.png")
-
-        # Set brightness
-        await pixoo.set_brightness(50)  # 0-100
+        await pixoo.sys_reboot()
 
 if __name__ == "__main__":
     asyncio.run(main())
@@ -31,7 +24,7 @@ if __name__ == "__main__":
 
 ## Documentation
 
-For detailed documentation, please visit our [GitHub repository](https://github.com/KoenDierckx/aiopixooapi).
+http://docin.divoom-gz.com/web/#/5/23
 
 ### Sources used
 
