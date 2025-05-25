@@ -26,6 +26,7 @@ dependencies = [
 test = [
     "pytest",
     "pytest-asyncio",
+    "flake8",
 ]
 
 [project.urls]
