@@ -1,8 +1,8 @@
 import pytest
-import asyncio
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, patch
 from aiopixooapi.pixoo import Pixoo
-from aiopixooapi.exceptions import PixooCommandError, PixooConnectionError
+from aiopixooapi.exceptions import PixooCommandError
+
 
 @pytest.mark.asyncio
 async def test_sys_reboot_success():
@@ -12,12 +12,14 @@ async def test_sys_reboot_success():
         result = await pixoo.sys_reboot()
         assert result == mock_response
 
+
 @pytest.mark.asyncio
 async def test_sys_reboot_error():
     pixoo = Pixoo("127.0.0.1")
     with patch.object(pixoo, "_make_request", AsyncMock(side_effect=PixooCommandError("Device error"))):
         with pytest.raises(PixooCommandError):
             await pixoo.sys_reboot()
+
 
 @pytest.mark.asyncio
 async def test_get_all_settings_success():
@@ -42,12 +44,14 @@ async def test_get_all_settings_success():
         result = await pixoo.get_all_settings()
         assert result == mock_response
 
+
 @pytest.mark.asyncio
 async def test_get_all_settings_error():
     pixoo = Pixoo("127.0.0.1")
     with patch.object(pixoo, "_make_request", AsyncMock(side_effect=PixooCommandError("Device error"))):
         with pytest.raises(PixooCommandError):
             await pixoo.get_all_settings()
+
 
 @pytest.mark.asyncio
 async def test_connect_and_close():

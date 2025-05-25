@@ -12,6 +12,7 @@ from .exceptions import PixooConnectionError, PixooCommandError
 
 logger = logging.getLogger(__name__)
 
+
 class Pixoo:
     """Control class for Divoom Pixoo64 device."""
 
