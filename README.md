@@ -1,78 +1,77 @@
-# aiopixooapi
 
-An asynchronous Python library for controlling Divoom Pixoo64 LED display devices.
+# AioPixooAPI
+
+A Python library for interacting with Divoom Pixoo devices and the Divoom online API.
 
 ## Installation
+
+Install the library using pip:
 
 ```bash
 pip install aiopixooapi
 ```
 
-## Quick Start
+## Usage
+
+### Pixoo64 (Device API)
+
+The `Pixoo64` class is used to interact with a Pixoo64 device on your local network.
 
 ```python
 import asyncio
-from aiopixooapi import Pixoo
-
+from aiopixooapi.pixoo64 import Pixoo64
 
 async def main():
-    # Connect to your Pixoo64 device
-    async with Pixoo("192.168.1.100") as pixoo:  # Replace with your device's IP address
-        await pixoo.get_all_settings()
+    async with Pixoo64("192.168.1.100") as pixoo:
+        # Reboot the device
+        response = await pixoo.sys_reboot()
+        print(response)
 
+        # Get all settings
+        settings = await pixoo.get_all_settings()
+        print(settings)
 
-if __name__ == "__main__":
-    asyncio.run(main())
+asyncio.run(main())
 ```
 
-## Documentation
+### Divoom (Online API)
 
-http://docin.divoom-gz.com/web/#/5/23
+The `Divoom` class is used to interact with the Divoom online API.
 
-### Sources used
+```python
+import asyncio
+from aiopixooapi.divoom import Divoom
 
-#### Divoom
+async def main():
+    async with Divoom() as divoom:
+        # Get dial types
+        dial_types = await divoom.get_dial_type()
+        print(dial_types)
 
-* https://divoom.com/apps/help-center#hc-pixoo64developeropen-sourcesdkapiopen-source
+        # Get dial list for a specific type and page
+        dial_list = await divoom.get_dial_list("Social", 1)
+        print(dial_list)
 
-That gives us:
+asyncio.run(main())
+```
 
-* http://doc.divoom-gz.com/web/#/12?page_id=89
-
-Where the contact page:
-
-* http://doc.divoom-gz.com/web/#/12?page_id=143
-
-Send us to
-
-* http://docin.divoom-gz.com/web/#/5/23
-
-OLDER REFERENCES
-
-* http://doc.divoom-gz.com/web/#/12
-* http://doc.divoom-gz.com/web/#/7
-* http://doc.divoom-gz.com/web/#/5
-
-## Running Tests
-
-To install test dependencies (including pytest):
+## Development
+### Setup
+To set up the development environment, clone the repository, create a virtual environment and install the required packages
 
 ```bash
-pip install .[test]
+pip install -e .
+pip install -e .[test]
 ```
 
-To run the tests using pytest, execute:
+### Testing
+
+Run the tests using `pytest`:
 
 ```bash
 pytest
 ```
 
-Or to run tests in a specific file:
-
-```bash
-pytest tests/test_pixoo.py
-```
-
 ## License
 
-This project is licensed under the GNU Affero General Public License v3.0 - see the LICENSE file for details.
+This project is licensed under the MIT License.

@@ -27,6 +27,7 @@ test = [
     "pytest",
     "pytest-asyncio",
     "flake8",
+    "aioresponses",
 ]
 
 [project.urls]
