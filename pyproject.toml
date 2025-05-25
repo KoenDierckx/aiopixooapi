@@ -4,7 +4,6 @@ build-backend = "hatchling.build"
 
 [project]
 name = "aiopixooapi"
-version = "0.0.2"
 description = "Asynchronous Python library for Divoom Pixoo64 LED display"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -52,3 +51,6 @@ ignore = [
     "D213", # warning: `multi-line-summary-first-line` (D212) and `multi-line-summary-second-line` (D213) are incompatible. Ignoring `multi-line-summary-second-line`.
 
 ]
+
+[tool.hatch.version]
+source = "vcs"
