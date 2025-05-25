@@ -21,6 +21,7 @@ dependencies = [
     "aiohttp>=3.9.0",
     "typing_extensions",
 ]
+dynamic = ["version"] # Use Hatch to manage versioning
 
 [project.optional-dependencies]
 test = [
