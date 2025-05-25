@@ -6,6 +6,20 @@ from typing import Optional
 from . import PixooCommandError
 from .base import BasePixoo
 
+MAX_CUSTOM_PAGE_INDEX = 2  # Maximum allowed custom page index
+MAX_BRIGHTNESS = 100
+MAX_RGB_VALUE = 100
+MAX_MINUTE = 59
+MAX_SECOND = 59
+MAX_SCORE = 999
+NET_FILE_TYPE = 2
+MAX_PIC_NUM = 59
+MAX_TEXT_ID = 19
+MIN_TEXT_WIDTH = 17
+MAX_TEXT_WIDTH = 63
+MAX_TEXT_LENGTH = 512
+MAX_FONT = 7
+MAX_ITEM_TEXT_ID = 39
 
 class ChannelSelectIndex(Enum):
     """Enum for valid channel IDs with meaningful names."""
@@ -136,8 +150,8 @@ class Pixoo64(BasePixoo):
             PixooCommandError: If the API returns an error or invalid response.
 
         """
-        if custom_page_index < 0 or custom_page_index > 2:
-            msg = f"Invalid custom page index: {custom_page_index}. Must be between 0 and 2."
+        if custom_page_index < 0 or custom_page_index > MAX_CUSTOM_PAGE_INDEX:
+            msg = f"Invalid custom page index: {custom_page_index}. Must be between 0 and {MAX_CUSTOM_PAGE_INDEX}."
             raise ValueError(msg)
         return await self._make_command_request("Channel/SetCustomPageIndex", {"CustomPageIndex": custom_page_index})
 
@@ -201,8 +215,8 @@ class Pixoo64(BasePixoo):
             PixooCommandError: If the API returns an error or invalid response.
 
         """
-        if brightness < 0 or brightness > 100:
-            msg = f"Invalid brightness value: {brightness}. Must be between 0 and 100."
+        if brightness < 0 or brightness > MAX_BRIGHTNESS:
+            msg = f"Invalid brightness value: {brightness}. Must be between 0 and {MAX_BRIGHTNESS}."
             raise ValueError(msg)
         return await self._make_command_request("Channel/SetBrightness", {"Brightness": brightness})
 
@@ -410,14 +424,14 @@ class Pixoo64(BasePixoo):
             PixooCommandError: If the API returns an error or invalid response.
 
         """
-        if not (0 <= r_value <= 100):
-            msg = f"RValue must be between 0 and 100. Got: {r_value}"
+        if not (0 <= r_value <= MAX_RGB_VALUE):
+            msg = f"RValue must be between 0 and {MAX_RGB_VALUE}. Got: {r_value}"
             raise ValueError(msg)
-        if not (0 <= g_value <= 100):
-            msg = f"GValue must be between 0 and 100. Got: {g_value}"
+        if not (0 <= g_value <= MAX_RGB_VALUE):
+            msg = f"GValue must be between 0 and {MAX_RGB_VALUE}. Got: {g_value}"
             raise ValueError(msg)
-        if not (0 <= b_value <= 100):
-            msg = f"BValue must be between 0 and 100. Got: {b_value}"
+        if not (0 <= b_value <= MAX_RGB_VALUE):
+            msg = f"BValue must be between 0 and {MAX_RGB_VALUE}. Got: {b_value}"
             raise ValueError(msg)
         return await self._make_command_request(
             "Device/SetWhiteBalance",
@@ -456,11 +470,11 @@ class Pixoo64(BasePixoo):
             PixooCommandError: If the API returns an error or invalid response.
 
         """
-        if not (0 <= minute <= 59):
-            msg = f"Minute must be between 0 and 59. Got: {minute}"
+        if not (0 <= minute <= MAX_MINUTE):
+            msg = f"Minute must be between 0 and {MAX_MINUTE}. Got: {minute}"
             raise ValueError(msg)
-        if not (0 <= second <= 59):
-            msg = f"Second must be between 0 and 59. Got: {second}"
+        if not (0 <= second <= MAX_SECOND):
+            msg = f"Second must be between 0 and {MAX_SECOND}. Got: {second}"
             raise ValueError(msg)
         if status not in (0, 1):
             msg = "Status must be 0 (stop) or 1 (start)."
@@ -504,11 +518,11 @@ class Pixoo64(BasePixoo):
             PixooCommandError: If the API returns an error or invalid response.
 
         """
-        if not (0 <= blue_score <= 999):
-            msg = f"BlueScore must be between 0 and 999. Got: {blue_score}"
+        if not (0 <= blue_score <= MAX_SCORE):
+            msg = f"BlueScore must be between 0 and {MAX_SCORE}. Got: {blue_score}"
             raise ValueError(msg)
-        if not (0 <= red_score <= 999):
-            msg = f"RedScore must be between 0 and 999. Got: {red_score}"
+        if not (0 <= red_score <= MAX_SCORE):
+            msg = f"RedScore must be between 0 and {MAX_SCORE}. Got: {red_score}"
             raise ValueError(msg)
         return await self._make_command_request(
             "Tools/SetScoreBoard",
@@ -549,8 +563,8 @@ class Pixoo64(BasePixoo):
             PixooCommandError: If the API returns an error or invalid response.
 
         """
-        if file_type != 2:
-            msg = "FileType must be 2 (net file)."
+        if file_type != NET_FILE_TYPE:
+            msg = f"FileType must be {NET_FILE_TYPE} (net file)."
             raise ValueError(msg)
         if not file_name:
             msg = "FileName must be provided."
@@ -636,8 +650,8 @@ class Pixoo64(BasePixoo):
             PixooCommandError: If the API returns an error or invalid response.
 
         """
-        if not (1 <= pic_num < 60):
-            msg = f"PicNum must be between 1 and 59. Got: {pic_num}"
+        if not (1 <= pic_num < MAX_PIC_NUM):
+            msg = f"PicNum must be between 1 and {MAX_PIC_NUM - 1}. Got: {pic_num}"
             raise ValueError(msg)
         if pic_width not in (16, 32, 64):
             msg = f"PicWidth must be one of 16, 32, or 64. Got: {pic_width}"
@@ -702,24 +716,23 @@ class Pixoo64(BasePixoo):
             PixooCommandError: If the API returns an error or invalid response.
 
         """
-        if not (0 <= text_id < 20):
-            msg = f"TextId must be between 0 and 19. Got: {text_id}"
+        if not (0 <= text_id <= MAX_TEXT_ID):
+            msg = f"TextId must be between 0 and {MAX_TEXT_ID}. Got: {text_id}"
             raise ValueError(msg)
-        if not (16 < text_width < 64):
-            msg = f"TextWidth must be between 17 and 63. Got: {text_width}"
+        if not (MIN_TEXT_WIDTH < text_width < MAX_TEXT_WIDTH):
+            msg = f"TextWidth must be between {MIN_TEXT_WIDTH + 1} and {MAX_TEXT_WIDTH - 1}. Got: {text_width}"
             raise ValueError(msg)
-        if len(text_string) >= 512:
-            msg = f"TextString length must be less than 512. Got: {len(text_string)}"
+        if len(text_string) >= MAX_TEXT_LENGTH:
+            msg = f"TextString length must be less than {MAX_TEXT_LENGTH}. Got: {len(text_string)}"
             raise ValueError(msg)
         if direction not in (0, 1):
             msg = f"Direction must be 0 (scroll left) or 1 (scroll right). Got: {direction}"
             raise ValueError(msg)
-        if not (0 <= font <= 7):
-            msg = f"Font must be between 0 and 7. Got: {font}"
+        if not (0 <= font <= MAX_FONT):
+            msg = f"Font must be between 0 and {MAX_FONT}. Got: {font}"
             raise ValueError(msg)
         if align not in (1, 2, 3):
             msg = f"Align must be 1 (left), 2 (middle), or 3 (right). Got: {align}"
-            raise ValueError(msg)
 
         return await self._make_command_request(
             "Draw/SendHttpText",
@@ -777,11 +790,11 @@ class Pixoo64(BasePixoo):
 
         """
         for item in item_list:
-            if not (0 <= item.get("TextId", -1) < 40):
-                msg = f"TextId must be between 0 and 39. Got: {item.get('TextId')}"
+            if not (0 <= item.get("TextId", -1) <= MAX_ITEM_TEXT_ID):
+                msg = f"TextId must be between 0 and {MAX_ITEM_TEXT_ID}. Got: {item.get('TextId')}"
                 raise ValueError(msg)
-            if len(item.get("TextString", "")) >= 512:
-                msg = f"TextString length must be less than 512. Got: {len(item.get('TextString', ''))}"
+            if len(item.get("TextString", "")) >= MAX_TEXT_LENGTH:
+                msg = f"TextString length must be less than {MAX_TEXT_LENGTH}. Got: {len(item.get('TextString', ''))}"
                 raise ValueError(msg)
 
         return await self._make_command_request("Draw/SendHttpItemList", {"ItemList": item_list})

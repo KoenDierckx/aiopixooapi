@@ -1,3 +1,5 @@
+# ruff: noqa: PLR2004, Magic value used in comparison
+
 """Unit tests for the Divoom device functionality."""
 
 import pytest

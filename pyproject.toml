@@ -47,8 +47,7 @@ line-length = 120
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "ANN204", # Missing type annotation for `self` or `cls`
-    "FA100",  # Avoid using `assert` statements
-    "PLR2004",# Unnecessary `pass` statement
-    "S101",   # Use of `assert` detected
+    "ANN204",
+    "FA100",
+    "S101",
 ]
