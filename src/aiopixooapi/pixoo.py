@@ -62,7 +62,8 @@ class Pixoo:
             with an error_code number = 0 on success
             
         Raises:
-            aiohttp.ClientError: If request fails
+            PixooCommandError: If the device returns an error or invalid response.
+            PixooConnectionError: If the request fails.
         """
         if self._session is None:
             await self.connect()
@@ -79,12 +80,15 @@ class Pixoo:
             ) as response:
                 text = await response.text()
                 try:
-                    return json.loads(text)
+                    result = json.loads(text)
                 except Exception as json_err:
                     logger.error(f"Failed to parse JSON from response: {text}")
                     raise PixooCommandError(
                         f"Failed to parse JSON from response: {text}"
                     ) from json_err
+                if result.get("error_code", 0) != 0:
+                    raise PixooCommandError(f"Device returned error: {result}")
+                return result
         except Exception as e:
             logger.error(f"Error making request to {command}: {e}")
             raise PixooConnectionError(f"Failed to connect to device: {e}")
@@ -112,7 +116,19 @@ class Pixoo:
             PixooConnectionError: If the request fails.
         """
         logger.debug("Rebooting Pixoo device")
-        response = await self._make_request("Device/SysReboot")
-        if response.get("error_code", 0) != 0:
-            raise PixooCommandError(f"Device returned error: {response}")
-        return response
+        return await self._make_request("Device/SysReboot")
+
+    async def get_all_settings(self) -> Dict[str, Any]:
+        """Get all settings from the Pixoo device.
+
+        Sends the 'Channel/GetAllConf' command to the device to retrieve all configuration settings.
+
+        Returns:
+            Response dictionary containing all settings.
+
+        Raises:
+            PixooCommandError: If the device returns an error or invalid response.
+            PixooConnectionError: If the request fails.
+        """
+        logger.debug("Requesting all settings from Pixoo device")
+        return await self._make_request("Channel/GetAllConf")
