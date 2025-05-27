@@ -98,3 +98,16 @@ class Divoom(BasePixoo):
 
         data = {"DeviceId": device_id, "DeviceMac": device_mac, "Page": page}
         return await self._make_request("Device/GetImgLikeList", data)
+
+    async def get_local_device_list(self) -> dict:
+        """Fetch the list of devices on the local network.
+
+        Returns:
+            Response dictionary containing ReturnCode, ReturnMessage, and DeviceList.
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+            PixooConnectionError: If the request fails.
+
+        """
+        return await self._make_request("Device/ReturnSameLANDevice")

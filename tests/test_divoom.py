@@ -171,3 +171,39 @@ async def test_get_img_like_list_invalid() -> None:
     async with Divoom() as divoom:
         with pytest.raises(ValueError, match="DeviceId and DeviceMac must be provided."):
             await divoom.get_img_like_list(0, "", 1)
+
+
+@pytest.mark.asyncio
+async def test_get_local_device_list() -> None:
+    """Test the get_local_device_list method."""
+    async with Divoom() as divoom:
+        with aioresponses() as mock:
+            mock.post(
+                "https://app.divoom-gz.com/Device/ReturnSameLANDevice",
+                payload={
+                    "ReturnCode": 0,
+                    "ReturnMessage": "",
+                    "DeviceList": [
+                        {
+                            "DeviceName": "Pixoo64",
+                            "DeviceId": 300000020,
+                            "DevicePrivateIP": "10.0.0.100",
+                            "DeviceMac": "a8032aff46b1",
+                        },
+                        {
+                            "DeviceName": "PixooMax",
+                            "DeviceId": 300000021,
+                            "DevicePrivateIP": "10.0.0.101",
+                            "DeviceMac": "a8032aff46b2",
+                        },
+                    ],
+                },
+            )
+            response = await divoom.get_local_device_list()
+            assert response["ReturnCode"] == 0
+            assert "DeviceList" in response
+            assert len(response["DeviceList"]) == 2
+            assert response["DeviceList"][0]["DeviceName"] == "Pixoo64"
+            assert response["DeviceList"][0]["DevicePrivateIP"] == "10.0.0.100"
+            assert response["DeviceList"][1]["DeviceName"] == "PixooMax"
+            assert response["DeviceList"][1]["DevicePrivateIP"] == "10.0.0.101"

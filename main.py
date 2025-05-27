@@ -17,6 +17,10 @@ logger = logging.getLogger(__name__)
 async def main() -> None:
     """Interact with Divoom and Pixoo64 devices asynchronously."""
     async with Divoom() as divoom:
+        # Get local device list
+        local_devices = await divoom.get_local_device_list()
+        logger.info(local_devices)
+
         # Get dial types
         dial_types = await divoom.get_dial_type()
         logger.info(dial_types)
