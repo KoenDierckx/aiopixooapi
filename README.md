@@ -64,14 +64,48 @@ pip install -e .
 pip install -e .[test]
 ```
 
-### Testing
+## Running Tests
 
-Run the tests using `pytest`:
+To run the tests using pytest, execute:
 
 ```bash
 pytest
 ```
 
+Or to run tests in a specific file:
+
+```bash
+pytest tests/test_pixoo64.py
+```
+
+## Documentation
+
+http://docin.divoom-gz.com/web/#/5/23
+
+### Sources used
+
+#### Divoom
+
+* https://divoom.com/apps/help-center#hc-pixoo64developeropen-sourcesdkapiopen-source
+
+That gives us:
+
+* http://doc.divoom-gz.com/web/#/12?page_id=89
+
+Where the contact page:
+
+* http://doc.divoom-gz.com/web/#/12?page_id=143
+
+Send us to
+
+* http://docin.divoom-gz.com/web/#/5/23
+
+OLDER REFERENCES
+
+* http://doc.divoom-gz.com/web/#/12
+* http://doc.divoom-gz.com/web/#/7
+* http://doc.divoom-gz.com/web/#/5
+
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the GNU Affero General Public License v3.0 - see the LICENSE file for details.
