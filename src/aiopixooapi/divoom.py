@@ -1,7 +1,14 @@
 """Provides functionality for interacting with Divoom devices."""
+from dataclasses import dataclass
+from typing import List
 
 from .base import BasePixoo
 
+@dataclass
+class Dial:
+    name: str
+    clockId: int
+    dial_type: str
 
 class Divoom(BasePixoo):
     """Subclass for handling online Divoom API calls."""
@@ -16,11 +23,52 @@ class Divoom(BasePixoo):
         base_url = "https://app.divoom-gz.com"
         super().__init__(base_url, timeout)
 
-    async def get_dial_type(self) -> dict:
-        """Fetch the list of dial types from the Divoom API."""
+    async def get_dial_types(self) -> List[str]:
+        """Fetch the list of dial types from the Divoom API.
+
+        Returns:
+            List of dial type names.
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+            PixooConnectionError: If the request fails.
+
+        """
+        response = await self._fetch_dial_types()
+        return response["DialTypeList"]
+
+    async def _fetch_dial_types(self) -> dict:
+        """Fetch the list of dial types from the Divoom API.
+        Returns:
+            Response dictionary containing ReturnCode, ReturnMessage, and DialTypeList.
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+            PixooConnectionError: If the request fails.
+        Reference:
+            http://docin.divoom-gz.com/web/#/5/27
+        """
         return await self._make_request("Channel/GetDialType")
 
-    async def get_dial_list(self, dial_type: str, page: int) -> dict:
+    async def get_dials_for_type(self, dial_type: str) -> List[Dial]:
+        page = 1
+        all_dials: List[Dial] = []
+        while True:
+            dial_list = await self._fetch_dial_list(dial_type, page)
+            dials = [
+                Dial(
+                    name=d["Name"],
+                    clockId=d["ClockId"],
+                    dial_type=dial_type
+                )
+                for d in dial_list["DialList"]
+            ]
+            all_dials.extend(dials)
+            if page >= dial_list["TotalNum"]:
+                break
+            page += 1
+        return all_dials
+
+    async def _fetch_dial_list(self, dial_type: str, page: int) -> dict:
         """Fetch the list of dials for a specific type and page.
 
         Args:
@@ -34,6 +82,8 @@ class Divoom(BasePixoo):
             PixooCommandError: If the API returns an error or invalid response.
             PixooConnectionError: If the request fails.
 
+        Reference:
+            http://docin.divoom-gz.com/web/#/5/28
         """
         data = {"DialType": dial_type, "Page": page}
         return await self._make_request("Channel/GetDialList", data)
