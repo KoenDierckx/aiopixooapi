@@ -106,6 +106,10 @@ OLDER REFERENCES
 * http://doc.divoom-gz.com/web/#/7
 * http://doc.divoom-gz.com/web/#/5
 
+### TODO
+* https://github.com/gickowtf/pixoo-homeassistant/discussions/72
+* https://github.com/Grayda/pixoo_api
+
 ## License
 
 This project is licensed under the GNU Affero General Public License v3.0 - see the LICENSE file for details.
