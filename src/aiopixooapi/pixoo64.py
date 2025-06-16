@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-from enum import Enum
-
 from . import PixooCommandError
 from .base import BasePixoo
+from .pixoo64_dicts import CHANNEL_DICT, CHANNEL_INDEX_CLOUD_DICT
 
 MAX_CUSTOM_PAGE_INDEX = 2  # Maximum allowed custom page index
 MAX_BRIGHTNESS = 100
@@ -21,25 +20,6 @@ MAX_TEXT_WIDTH = 63
 MAX_TEXT_LENGTH = 512
 MAX_FONT = 7
 MAX_ITEM_TEXT_ID = 39
-
-
-class ChannelSelectIndex(Enum):
-    """Enum for valid channel IDs with meaningful names."""
-
-    FACES = 0  # Faces
-    CLOUD_CHANNEL = 1  # Cloud Channel
-    VISUALIZER = 2  # Visualizer
-    CUSTOM = 3  # Custom
-    BLACK_SCREEN = 4  # Black Screen
-
-
-class CloudChannelIndex(Enum):
-    """Enum for valid cloud channel indices with meaningful names."""
-
-    RECOMMEND_GALLERY = 0  # Recommend gallery
-    FAVOURITE = 1  # Favourite
-    SUBSCRIBE_ARTIST = 2  # Subscribe artist
-    ALBUM = 3  # Album
 
 
 class Pixoo64(BasePixoo):
@@ -123,7 +103,7 @@ class Pixoo64(BasePixoo):
         """
         return await self._make_command_request("Channel/GetClockInfo")
 
-    async def set_channel(self, select_index: ChannelSelectIndex) -> dict:
+    async def set_channel(self, select_index: CHANNEL_DICT) -> dict:
         """Set the device to the selected channel.
 
         Args:
@@ -176,7 +156,7 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Channel/SetEqPosition", {"EqPosition": eq_position})
 
-    async def set_cloud_channel(self, index: CloudChannelIndex) -> dict:
+    async def set_cloud_channel(self, index: CHANNEL_INDEX_CLOUD_DICT) -> dict:
         """Set the device to a specific cloud channel.
 
         Args:
