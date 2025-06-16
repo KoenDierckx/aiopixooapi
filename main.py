@@ -22,12 +22,13 @@ async def main() -> None:
         logger.info(local_devices)
 
         # Get dial types
-        dial_types = await divoom.get_dial_type()
+        dial_types = await divoom.get_dial_types()
         logger.info(dial_types)
 
         # Get dial list for a specific type and page
-        dial_list = await divoom.get_dial_list("Social", 1)
-        logger.info(dial_list)
+        for dial_type in dial_types:
+            dials = await divoom.get_dials_for_type(dial_type)
+            logger.info(dials)
 
         # Get font list
         font_list = await divoom.get_font_list()
@@ -71,8 +72,6 @@ async def main() -> None:
         # logger.info(http_gif_id)
 
 
-
-
         # # Set channel
         # channel_response = await pixoo64.set_channel(ChannelSelectIndex.FACES)
         # logger.info(channel_response)
@@ -80,17 +79,17 @@ async def main() -> None:
         # # Set clock face
         # clock_response = await pixoo64.set_clock_select_id(1)
         # logger.info(clock_response)
-    #
-    #     # Set custom page index
-    #     custom_page_response = await pixoo64.set_custom_page_index(1)
-    #     logger.info(custom_page_response)
-    #
-    #     # Set visualizer position
-    #     visualizer_response = await pixoo64.set_visualizer_position(0)
-    #     logger.info(visualizer_response)
+
+        # Set custom page index
+        # custom_page_response = await pixoo64.set_custom_page_index(1)
+        # logger.info(custom_page_response)
+
+        # Set visualizer position
+        # visualizer_response = await pixoo64.set_visualizer_position(0)
+        # logger.info(visualizer_response)
     #
     #     # Set cloud channel
-    #     cloud_channel_response = await pixoo64.set_cloud_channel(CloudChannelIndex.RECOMMEND_GALLERY)
+    #     cloud_channel_response = await pixoo64.set_cloud_channel(3)
     #     logger.info(cloud_channel_response)
     #
     #     # Set brightness
