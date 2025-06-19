@@ -8,7 +8,7 @@ import asyncio
 import logging
 
 from aiopixooapi.divoom import Divoom
-from aiopixooapi.pixoo64 import Pixoo64, ChannelSelectIndex
+from aiopixooapi.pixoo64 import Pixoo64
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -44,7 +44,7 @@ async def main() -> None:
 
     async with Pixoo64("10.116.4.238") as pixoo64:
         # Get all settings
-        settings = await pixoo64.get_all_settings()
+        settings = await pixoo64.get_common_settings()
         logger.info(settings)
 
         # # Get clock info

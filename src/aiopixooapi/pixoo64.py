@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+from enum import Enum
+
 from . import PixooCommandError
 from .base import BasePixoo
-from .pixoo64_dicts import CHANNEL_DICT, CHANNEL_INDEX_CLOUD_DICT
+from .pixoo64_dicts import CHANNEL_DICT, CHANNEL_INDEX_CLOUD_DICT, CHANNEL_INDEX_FACES_DICT, CHANNEL_INDEX_CUSTOM_DICT, CHANNEL_INDEX_VISUALIZER_DICT
 
 MAX_CUSTOM_PAGE_INDEX = 2  # Maximum allowed custom page index
 MAX_BRIGHTNESS = 100
@@ -22,6 +25,73 @@ MAX_FONT = 7
 MAX_ITEM_TEXT_ID = 39
 
 
+class ScreenMode(Enum):
+    OFF = 0
+    ON = 1
+
+class MirrorMode(Enum):
+    NORMAL = 0
+    MIRRORED = 1
+
+class HourMode(Enum):
+    H12 = 0
+    H24 = 1
+
+class TemperatureMode(Enum):
+    CELSIUS = 0
+    FAHRENHEIT = 1
+
+class RotationMode(Enum):
+    NORMAL = 0
+    RIGHT = 1
+    UPSIDE_DOWN = 2
+    LEFT = 3
+
+class GalleryMode(Enum):
+    OFF = 0
+    ON = 1
+
+class GalleryShowTimeMode(Enum):
+    OFF = 0
+    ON = 1
+
+@dataclass
+class Pixoo64Data:
+    screen_mode: ScreenMode = ScreenMode.ON
+    brightness: int = 0
+    channel: CHANNEL_DICT = None
+    faces_id: CHANNEL_INDEX_FACES_DICT = None
+    mirror_mode: MirrorMode = MirrorMode.NORMAL
+    hour_mode: HourMode = HourMode.H24
+    temperature_mode: TemperatureMode = TemperatureMode.CELSIUS
+    rotation_mode: RotationMode = RotationMode.NORMAL
+    gallery_show_time_mode: GalleryShowTimeMode = GalleryShowTimeMode.OFF
+    clock_time: int = -1
+    gallery_time: int = -1
+    single_gallery_time: int = -1
+    utc_timestamp: int = 0
+    local_time_string: str = None
+    # READ-ONLY
+    power_on_channel: CHANNEL_DICT = None
+    gallery_mode: GalleryMode = GalleryMode.OFF
+    weather_string: str = None
+    weather_current_temperature: float = 0.0
+    weather_min_temperature: float = 0.0
+    weather_max_temperature: float = 0.0
+    weather_pressure: int = 0
+    weather_humidity: int = 0
+    weather_visibility: int = 0
+    weather_wind_speed: float = 0.0
+
+# NOTE: we can set this but not read it back !!!!
+@dataclass
+class Pixoo64ConfigData:
+    weather_longitude: str = ""
+    weather_latitude: str = ""
+    time_zone: str = ""
+    white_balance: tuple[int, int, int] = (0, 0, 0)
+
+
 class Pixoo64(BasePixoo):
     """Subclass for handling Pixoo64 device-specific API calls."""
 
@@ -36,6 +106,16 @@ class Pixoo64(BasePixoo):
         """
         base_url = f"http://{host}:{port}"
         super().__init__(base_url, timeout)
+        self._data = Pixoo64Data()
+
+    async def update_data(self) -> Pixoo64Data:
+        """Update the Pixoo64 device data."""
+        await self.get_channel()
+        await self.get_common_settings()
+        await self.get_clock_info()
+        await self.get_device_time()
+        await self.get_weather_info()
+        return self._data
 
     async def _make_command_request(self, command: str, data: dict | None = None) -> dict:
         """Make a request to the Pixoo64 device with a command.
@@ -56,123 +136,15 @@ class Pixoo64(BasePixoo):
         data["Command"] = command
         return await self._make_request("post", data)
 
-    async def sys_reboot(self) -> dict:
-        """Reboot the Pixoo64 device."""
+    async def _reboot(self) -> dict:
+        """Reboot the Pixoo64 device.
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/26
+        """
         return await self._make_command_request("Device/SysReboot")
 
-    async def get_all_settings(self) -> dict:
-        """Get all settings from the Pixoo64 device.
-
-        Returns:
-            Response dictionary containing all settings.
-
-        Raises:
-            PixooCommandError: If the API returns an error or invalid response.
-
-        """
-        response = await self._make_command_request("Channel/GetAllConf")
-        if response.get("error_code", 0) != 0:
-            msg = f"Failed to get all settings: {response}"
-            raise PixooCommandError(msg)
-        return response
-
-    async def set_clock_select_id(self, clock_id: int) -> dict:
-        """Set the clock face by selecting the clock ID.
-
-        Args:
-            clock_id: The ID of the clock face to select.
-
-        Returns:
-            Response dictionary containing the error_code.
-
-        Raises:
-            PixooCommandError: If the API returns an error or invalid response.
-
-        """
-        return await self._make_command_request("Channel/SetClockSelectId", {"ClockId": clock_id})
-
-    async def get_clock_info(self) -> dict:
-        """Get the current working face ID and brightness.
-
-        Returns:
-            Response dictionary containing ClockId and Brightness.
-
-        Raises:
-            PixooCommandError: If the API returns an error or invalid response.
-
-        """
-        return await self._make_command_request("Channel/GetClockInfo")
-
-    async def set_channel(self, select_index: CHANNEL_DICT) -> dict:
-        """Set the device to the selected channel.
-
-        Args:
-            select_index: The channel to select (as a ChannelSelectIndex enum).
-
-        Returns:
-            Response dictionary containing the error_code.
-
-        Raises:
-            PixooCommandError: If the API returns an error or invalid response.
-
-        """
-        return await self._make_command_request("Channel/SetIndex", {"SelectIndex": select_index.value})
-
-    async def set_custom_page_index(self, custom_page_index: int) -> dict:
-        """Set the device to a specific custom page index.
-
-        Args:
-            custom_page_index: The custom page index to select (0~2).
-
-        Returns:
-            Response dictionary containing the error_code.
-
-        Raises:
-            ValueError: If the custom_page_index is out of range.
-            PixooCommandError: If the API returns an error or invalid response.
-
-        """
-        if custom_page_index < 0 or custom_page_index > MAX_CUSTOM_PAGE_INDEX:
-            msg = f"Invalid custom page index: {custom_page_index}. Must be between 0 and {MAX_CUSTOM_PAGE_INDEX}."
-            raise ValueError(msg)
-        return await self._make_command_request("Channel/SetCustomPageIndex", {"CustomPageIndex": custom_page_index})
-
-    async def set_visualizer_position(self, eq_position: int) -> dict:
-        """Set the device to a specific visualizer position.
-
-        Args:
-            eq_position: The visualizer position index (starting from 0).
-
-        Returns:
-            Response dictionary containing the error_code.
-
-        Raises:
-            ValueError: If the eq_position is negative.
-            PixooCommandError: If the API returns an error or invalid response.
-
-        """
-        if eq_position < 0:
-            msg = f"Invalid visualizer position: {eq_position}. Must be 0 or greater."
-            raise ValueError(msg)
-        return await self._make_command_request("Channel/SetEqPosition", {"EqPosition": eq_position})
-
-    async def set_cloud_channel(self, index: CHANNEL_INDEX_CLOUD_DICT) -> dict:
-        """Set the device to a specific cloud channel.
-
-        Args:
-            index: The cloud channel to select (as a CloudChannelIndex enum).
-
-        Returns:
-            Response dictionary containing the error_code.
-
-        Raises:
-            PixooCommandError: If the API returns an error or invalid response.
-
-        """
-        return await self._make_command_request("Channel/CloudIndex", {"Index": index.value})
-
-    async def get_current_channel(self) -> dict:
-        """Get the current channel the device is on.
+    async def get_channel(self) -> dict:
+        """Get the channel the device is on.
 
         Returns:
             Response dictionary containing SelectIndex.
@@ -180,8 +152,128 @@ class Pixoo64(BasePixoo):
         Raises:
             PixooCommandError: If the API returns an error or invalid response.
 
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/35
         """
-        return await self._make_command_request("Channel/GetIndex")
+        response = await self._make_command_request("Channel/GetIndex")
+        self._data.channel = CHANNEL_DICT.get(response["SelectIndex"])
+        return response
+
+    async def get_common_settings(self) -> dict:
+        """Get settings from the Pixoo64 device.
+
+        Returns:
+            Response dictionary containing all common settings:
+            * screen switch (light switch)
+            * brightness
+            * current clock id
+            * power on channel id
+            * time 24 flag
+            * temperature mode
+            * gyrate angle
+            * mirror flag
+            * rotation flag
+            * gallery show time flag
+            * clock time
+            * gallery time
+            * single gallery time
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/37
+        """
+        response = await self._make_command_request("Channel/GetAllConf")
+
+        self._data.screen_mode = ScreenMode(response["LightSwitch"])
+        self._data.faces_id = CHANNEL_INDEX_FACES_DICT.get(response["CurClockId"])
+        self._data.brightness = int(response["Brightness"])
+        self._data.mirror_mode = MirrorMode(response["MirrorFlag"])
+        self._data.hour_mode = HourMode(response["Time24Flag"])
+        self._data.temperature_mode = TemperatureMode(response["TemperatureMode"])
+        self._data.rotation_mode = RotationMode(response["GyrateAngle"])
+        self._data.gallery_mode = GalleryMode(response["RotationFlag"])
+        self._data.gallery_show_time_mode = GalleryShowTimeMode(response["GalleryShowTimeFlag"])
+        self._data.power_on_channel = CHANNEL_DICT.get(response["PowerOnChannelId"])
+        self._data.clock_time = int(response["ClockTime"])
+        self._data.gallery_time = int(response["GalleryTime"])
+        self._data.single_gallery_time = int(response["SingleGalleryTime"])
+        return response
+
+    async def get_clock_info(self) -> dict:
+        """Get the current working face ID and brightness.
+
+        Returns:
+            Response dictionary containing ClockId and Brightness.
+            * ClockId
+            * Brightness
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/30
+        """
+        response = await self._make_command_request("Channel/GetClockInfo")
+        self._data.clock_id = CHANNEL_INDEX_FACES_DICT.get(response["ClockId"])
+        self._data.brightness = response["Brightness"]
+        return response
+
+    async def get_device_time(self) -> dict:
+        """Get the device system time.
+
+        Returns:
+            Response dictionary containing error_code, UTCTime, and LocalTime.
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/42
+        """
+        response = await self._make_command_request("Device/GetDeviceTime")
+        self._data.utc_timestamp = response["UTCTime"]
+        self._data.local_time_string = response["LocalTime"]
+        return response
+
+    async def get_weather_info(self) -> dict:
+        """Get the weather information displayed on the device.
+
+        Returns:
+            Response dictionary containing weather details such as Weather, CurTemp, MinTemp, MaxTemp, etc.
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+
+        """
+        response = await self._make_command_request("Device/GetWeatherInfo")
+        self._data.weather_string = response["Weather"]
+        self._data.weather_current_temperature = float(response["CurTemp"])
+        self._data.weather_min_temperature = float(response["MinTemp"])
+        self._data.weather_max_temperature = float(response["MaxTemp"])
+        self._data.weather_pressure = int(response["Pressure"])
+        self._data.weather_humidity = int(response["Humidity"])
+        self._data.weather_visibility = int(response["Visibility"])
+        self._data.weather_wind_speed = float(response["WindSpeed"])
+        return response
+
+    async def set_screen_mode(self, screen_mode: ScreenMode) -> dict:
+        """Switch the screen on or off.
+
+        Args:
+            ON, OFF
+
+        Returns:
+            Response dictionary containing the error_code.
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/41
+        """
+        return await self._make_command_request("Channel/OnOffScreen", {"OnOff": screen_mode.value})
 
     async def set_brightness(self, brightness: int) -> dict:
         """Set the brightness of the device.
@@ -195,12 +287,190 @@ class Pixoo64(BasePixoo):
         Raises:
             ValueError: If the brightness is out of range.
             PixooCommandError: If the API returns an error or invalid response.
-
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/36
         """
         if brightness < 0 or brightness > MAX_BRIGHTNESS:
             msg = f"Invalid brightness value: {brightness}. Must be between 0 and {MAX_BRIGHTNESS}."
             raise ValueError(msg)
         return await self._make_command_request("Channel/SetBrightness", {"Brightness": brightness})
+
+    async def set_channel(self, select_index: CHANNEL_DICT) -> dict:
+        """Set the device to the selected channel.
+
+        Args:
+            select_index: The channel to select (as a ChannelSelectIndex enum).
+
+        Returns:
+            Response dictionary containing the error_code.
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/31
+
+        """
+        return await self._make_command_request("Channel/SetIndex", {"SelectIndex": select_index.value})
+
+    async def set_face_index(self, face_index: CHANNEL_INDEX_FACES_DICT) -> dict:
+        """Set the clock face by selecting the clock ID.
+
+        Args:
+            face_index: The ID of the clock face to select.
+
+        Returns:
+            Response dictionary containing the error_code.
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/29
+
+        """
+        return await self._make_command_request("Channel/SetClockSelectId", {"ClockId": face_index.value})
+
+    async def set_custom_page_index(self, custom_page_index: CHANNEL_INDEX_CUSTOM_DICT) -> dict:
+        """Set the device to a specific custom page index.
+
+        Args:
+            custom_page_index: The custom page index to select (0~2).
+
+        Returns:
+            Response dictionary containing the error_code.
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/32
+        """
+        return await self._make_command_request("Channel/SetCustomPageIndex", {"CustomPageIndex": custom_page_index.value})
+
+    async def set_visualizer_index(self, visualizer_index: CHANNEL_INDEX_VISUALIZER_DICT) -> dict:
+        """Set the device to a specific visualizer position.
+
+        Args:
+            visualizer_index: The visualizer position index (starting from 0).
+
+        Returns:
+            Response dictionary containing the error_code.
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/33
+        """
+        return await self._make_command_request("Channel/SetEqPosition", {"EqPosition": visualizer_index.value})
+
+    async def set_cloud_channel_index(self, cloud_channel_index: CHANNEL_INDEX_CLOUD_DICT) -> dict:
+        """Set the device to a specific cloud channel.
+
+        Args:
+            cloud_channel_index: The cloud channel to select (as a CloudChannelIndex enum).
+
+        Returns:
+            Response dictionary containing the error_code.
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/34
+        """
+        return await self._make_command_request("Channel/CloudIndex", {"Index": cloud_channel_index.value})
+
+    async def set_mirror_mode(self, mirror_mode: MirrorMode) -> dict:
+        """Set the screen mirror mode.
+
+        Args:
+            mirror_mode: NORMAL, MIRRORED
+
+        Returns:
+            Response dictionary containing the error_code.
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/45
+        """
+        return await self._make_command_request("Device/SetMirrorMode", {"Mode": mirror_mode.value})
+
+    async def set_hour_mode(self, hour_mode: HourMode) -> dict:
+        """Set the screen hour mode to 24-hour or 12-hour.
+
+        Args:
+            hour_mode: H24, H12
+
+        Returns:
+            Response dictionary containing the error_code.
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/38
+        """
+        return await self._make_command_request("Device/SetTime24Flag", {"Mode": hour_mode.value})
+
+    async def set_temperature_mode(self, temperature_mode: TemperatureMode) -> dict:
+        """Set the temperature mode to Celsius or Fahrenheit.
+
+        Args:
+            CELSIUS, FAHRENHEIT.
+
+        Returns:
+            Response dictionary containing the error_code.
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/43
+
+        """
+        return await self._make_command_request("Device/SetDisTempMode", {"Mode": temperature_mode.value})
+
+    async def set_rotation_mode(self, rotation_mode: RotationMode) -> dict:
+        """Set the screen rotation angle.
+
+        Args:
+            rotation_mode: The rotation mode (NORMAL, LEFT, RIGHT, UPSIDE_DOWN).
+
+        Returns:
+            Response dictionary containing the error_code.
+
+        Raises:
+            PixooCommandError: If the API returns an error or invalid response.
+
+        Reference:
+            https://docin.divoom-gz.com/web/#/5/44
+        """
+        return await self._make_command_request("Device/SetScreenRotationAngle", {"Mode": rotation_mode.value})
+
+
+
+    async def set_high_light_mode(self, mode: int) -> dict:
+        """Set the screen high light mode.
+
+        Args:
+            mode: 0 to close, 1 to open.
+
+        Returns:
+            Response dictionary containing the error_code.
+
+        Raises:
+            ValueError: If the mode is not 0 or 1.
+            PixooCommandError: If the API returns an error or invalid response.
+
+        """
+        if mode not in (0, 1):
+            msg = "Mode must be 0 (close) or 1 (open)."
+            raise ValueError(msg)
+        return await self._make_command_request("Device/SetHighLightMode", {"Mode": mode})
 
     async def set_weather_area(self, longitude: str, latitude: str) -> dict:
         """Set the weather area by specifying longitude and latitude.
@@ -260,136 +530,6 @@ class Pixoo64(BasePixoo):
             raise ValueError(msg)
         return await self._make_command_request("Device/SetUTC", {"Utc": utc})
 
-    async def set_screen_switch(self, on_off: int) -> dict:
-        """Switch the screen on or off.
-
-        Args:
-            on_off: 1 to turn the screen on, 0 to turn it off.
-
-        Returns:
-            Response dictionary containing the error_code.
-
-        Raises:
-            ValueError: If on_off is not 0 or 1.
-            PixooCommandError: If the API returns an error or invalid response.
-
-        """
-        if on_off not in (0, 1):
-            msg = "OnOff must be 0 (off) or 1 (on)."
-            raise ValueError(msg)
-        return await self._make_command_request("Channel/OnOffScreen", {"OnOff": on_off})
-
-    async def get_device_time(self) -> dict:
-        """Get the device system time.
-
-        Returns:
-            Response dictionary containing error_code, UTCTime, and LocalTime.
-
-        Raises:
-            PixooCommandError: If the API returns an error or invalid response.
-
-        """
-        response = await self._make_command_request("Device/GetDeviceTime")
-        if response.get("error_code", 0) != 0:
-            msg = f"Failed to get device time: {response}"
-            raise PixooCommandError(msg)
-        return response
-
-    async def set_temperature_mode(self, mode: int) -> dict:
-        """Set the temperature mode to Celsius or Fahrenheit.
-
-        Args:
-            mode: 0 for Celsius, 1 for Fahrenheit.
-
-        Returns:
-            Response dictionary containing the error_code.
-
-        Raises:
-            ValueError: If the mode is not 0 or 1.
-            PixooCommandError: If the API returns an error or invalid response.
-
-        """
-        if mode not in (0, 1):
-            msg = "Mode must be 0 (Celsius) or 1 (Fahrenheit)."
-            raise ValueError(msg)
-        return await self._make_command_request("Device/SetDisTempMode", {"Mode": mode})
-
-    async def set_screen_rotation_angle(self, mode: int) -> dict:
-        """Set the screen rotation angle.
-
-        Args:
-            mode: The rotation angle mode (0: normal, 1: 90, 2: 180, 3: 270).
-
-        Returns:
-            Response dictionary containing the error_code.
-
-        Raises:
-            ValueError: If the mode is not one of the valid options.
-            PixooCommandError: If the API returns an error or invalid response.
-
-        """
-        if mode not in (0, 1, 2, 3):
-            msg = "Mode must be 0 (normal), 1 (90), 2 (180), or 3 (270)."
-            raise ValueError(msg)
-        return await self._make_command_request("Device/SetScreenRotationAngle", {"Mode": mode})
-
-    async def set_mirror_mode(self, mode: int) -> dict:
-        """Set the screen mirror mode.
-
-        Args:
-            mode: 0 to disable, 1 to enable.
-
-        Returns:
-            Response dictionary containing the error_code.
-
-        Raises:
-            ValueError: If the mode is not 0 or 1.
-            PixooCommandError: If the API returns an error or invalid response.
-
-        """
-        if mode not in (0, 1):
-            msg = "Mode must be 0 (disable) or 1 (enable)."
-            raise ValueError(msg)
-        return await self._make_command_request("Device/SetMirrorMode", {"Mode": mode})
-
-    async def set_hour_mode(self, mode: int) -> dict:
-        """Set the screen hour mode to 24-hour or 12-hour.
-
-        Args:
-            mode: 1 for 24-hour mode, 0 for 12-hour mode.
-
-        Returns:
-            Response dictionary containing the error_code.
-
-        Raises:
-            ValueError: If the mode is not 0 or 1.
-            PixooCommandError: If the API returns an error or invalid response.
-
-        """
-        if mode not in (0, 1):
-            msg = "Mode must be 0 (12-hour) or 1 (24-hour)."
-            raise ValueError(msg)
-        return await self._make_command_request("Device/SetTime24Flag", {"Mode": mode})
-
-    async def set_high_light_mode(self, mode: int) -> dict:
-        """Set the screen high light mode.
-
-        Args:
-            mode: 0 to close, 1 to open.
-
-        Returns:
-            Response dictionary containing the error_code.
-
-        Raises:
-            ValueError: If the mode is not 0 or 1.
-            PixooCommandError: If the API returns an error or invalid response.
-
-        """
-        if mode not in (0, 1):
-            msg = "Mode must be 0 (close) or 1 (open)."
-            raise ValueError(msg)
-        return await self._make_command_request("Device/SetHighLightMode", {"Mode": mode})
-
     async def set_white_balance(self, r_value: int, g_value: int, b_value: int) -> dict:
         """Set the screen white balance.
 
@@ -419,22 +559,6 @@ class Pixoo64(BasePixoo):
             "Device/SetWhiteBalance",
             {"RValue": r_value, "GValue": g_value, "BValue": b_value},
         )
-
-    async def get_weather_info(self) -> dict:
-        """Get the weather information displayed on the device.
-
-        Returns:
-            Response dictionary containing weather details such as Weather, CurTemp, MinTemp, MaxTemp, etc.
-
-        Raises:
-            PixooCommandError: If the API returns an error or invalid response.
-
-        """
-        response = await self._make_command_request("Device/GetWeatherInfo")
-        if response.get("error_code", 0) != 0:
-            msg = f"Failed to get weather info: {response}"
-            raise PixooCommandError(msg)
-        return response
 
     async def set_countdown_timer(self, minute: int, second: int, status: int) -> dict:
         """Control the countdown tool.

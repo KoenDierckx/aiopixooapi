@@ -19,7 +19,7 @@ classifiers = [
 ]
 dependencies = [
     "aiohttp>=3.9.0",
-    "biddict==0.23.1",
+    "bidict==0.23.1",
     "typing_extensions",
 ]
 dynamic = ["version"] # Use Hatch to manage versioning
